@@ -1,15 +1,10 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:tec_me/view/config/app.dart';
+import 'package:tec_me/view/pages/sign_up/signup.dart';
 
-class Signup extends StatefulWidget {
-  const Signup({super.key});
+class ForgotPassword extends StatelessWidget {
+  const ForgotPassword({super.key});
 
-  @override
-  State<Signup> createState() => _SignupState();
-}
-
-class _SignupState extends State<Signup> {
   @override
   Widget build(BuildContext context) {
     double w = MediaQuery.of(context).size.width;
@@ -50,29 +45,23 @@ class _SignupState extends State<Signup> {
                         height: h * 0.03,
                       ),
                       Text(
-                        "Sign Up",
+                        "Forgot Password",
                         style: TextStyle(
                             fontSize: 25, fontFamily: 'Inria-sans-bold'),
                       ),
                       SizedBox(
                         height: h * 0.035,
                       ),
-                      SizedBox(
-                        width: w * 0.80,
-                        child: TextFormField(
-                          decoration: InputDecoration(
-                            hintStyle: TextStyle(
-                                fontFamily: AppConfig.font_regular_family),
-                            filled: true,
-                            fillColor: const Color(0xFFD9D9D9),
-                            hintText: "Enter Email",
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12.0)),
+                      Row(
+                        children: [
+                          SizedBox(
+                            width: w * 0.10,
                           ),
-                        ),
+                          Text("Enter Your Registered Email"),
+                        ],
                       ),
                       SizedBox(
-                        height: h * 0.035,
+                        height: h * 0.01,
                       ),
                       SizedBox(
                         width: w * 0.80,
@@ -81,8 +70,8 @@ class _SignupState extends State<Signup> {
                             hintStyle: TextStyle(
                                 fontFamily: AppConfig.font_regular_family),
                             filled: true,
-                            fillColor: const Color(0xFFD9D9D9),
-                            hintText: "Enter Password",
+                            fillColor: const Color(0xFFD1D3DE),
+                            hintText: "EX: index@example.com",
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12.0)),
                           ),
@@ -108,7 +97,7 @@ class _SignupState extends State<Signup> {
                           ),
                           onPressed: () {},
                           child: Text(
-                            "Sign Up",
+                            "Continue",
                             style: TextStyle(
                                 color: Colors.white,
                                 fontFamily: AppConfig.font_bold_family,
@@ -119,38 +108,28 @@ class _SignupState extends State<Signup> {
                       SizedBox(
                         height: h * 0.035,
                       ),
-                      GestureDetector(
-                        onTap: () {
-                          print("Clicked");
-                        },
-                        child: Text(
-                          "Already Have an Account?",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'Inria-sans-Regular'),
-                        ),
-                      ),
-                      SizedBox(
-                        height: h * 0.025,
-                      ),
-                      Text(
-                        "Or Sign Up with",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'Inria-sans-Regular'),
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          print("Google account");
-                        },
-                        child: SizedBox(
-                          width: w * 0.20,
-                          height: w * 0.20,
-                          child: Container(
-                            margin: EdgeInsets.only(bottom: h * 0.005),
-                            child: Image.asset(
-                              AppConfig.google_icon,
+                      Container(
+                        width: w * 0.80,
+                        height: h * 0.07,
+                        child: ElevatedButton(
+                          style: ButtonStyle(
+                            shape: WidgetStateProperty.all(
+                              RoundedRectangleBorder(
+                                // Change your radius here
+                                borderRadius: BorderRadius.circular(12.0),
+                              ),
                             ),
+                            backgroundColor: WidgetStatePropertyAll(
+                              Color(0xFFD1D3DE),
+                            ),
+                          ),
+                          onPressed: () {},
+                          child: Text(
+                            "Back",
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontFamily: AppConfig.font_bold_family,
+                                fontWeight: FontWeight.bold),
                           ),
                         ),
                       ),

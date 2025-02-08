@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tec_me/view/config/app.dart';
+import 'package:tec_me/view/pages/forgot_password/forgot_password.dart';
+import 'package:tec_me/view/pages/sign_up/signup.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -121,9 +123,24 @@ class _LoginState extends State<Login> {
                       GestureDetector(
                         onTap: () {
                           print("Clicked");
+                          Navigator.push(
+                            context,
+                            PageRouteBuilder(
+                              pageBuilder:
+                                  (context, animation, secondaryAnimation) =>
+                                      const Signup(),
+                              transitionsBuilder: (context, animation,
+                                  secondaryAnimation, child) {
+                                return FadeTransition(
+                                  opacity: animation,
+                                  child: child,
+                                );
+                              },
+                            ),
+                          );
                         },
                         child: Text(
-                          "Already Have an Account?",
+                          "Create an Account",
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontFamily: 'Inria-sans-Regular'),
@@ -135,6 +152,20 @@ class _LoginState extends State<Login> {
                       GestureDetector(
                         onTap: () {
                           print("Forgotten Password");
+                          Navigator.push(
+                            context,
+                            PageRouteBuilder(
+                              pageBuilder:
+                                  (context, animation, secondaryAnimation) =>
+                                      const ForgotPassword(),
+                              transitionsBuilder: (context, animation,
+                                      secondaryAnimation, child) =>
+                                  FadeTransition(
+                                opacity: animation,
+                                child: child,
+                              ),
+                            ),
+                          );
                         },
                         child: Text(
                           "Forgotten Password?",
