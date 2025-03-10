@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tec_me/view/config/app.dart';
+import 'package:tec_me/view/pages/dashboard/dashboard.dart';
 import 'package:tec_me/view/pages/forgot_password/forgot_password.dart';
 import 'package:tec_me/view/pages/sign_up/signup.dart';
 
@@ -107,7 +108,22 @@ class _LoginState extends State<Login> {
                               Color(0xFF000b58),
                             ),
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              PageRouteBuilder(
+                                pageBuilder:
+                                    (context, animation, secondaryAnimation) =>
+                                        DashboardPage(),
+                                transitionsBuilder: (context, animation,
+                                        secondaryAnimation, child) =>
+                                    FadeTransition(
+                                  opacity: animation,
+                                  child: child,
+                                ),
+                              ),
+                            );
+                          },
                           child: Text(
                             "Sign In",
                             style: TextStyle(
