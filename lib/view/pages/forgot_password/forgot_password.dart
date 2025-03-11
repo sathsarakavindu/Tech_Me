@@ -11,24 +11,25 @@ class ForgotPassword extends StatelessWidget {
     double h = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: Color(0xFF000b58),
-      body: Container(
-        child: Column(
-          children: [
-            SizedBox(
-              height: h * 0.12,
-            ),
-            Center(
-              child: Container(
-                width: h * 0.115,
-                height: h * 0.115,
-                margin: EdgeInsets.only(bottom: h * 0.05),
-                child: Image.asset(
-                  AppConfig.app_icon,
+      body: SingleChildScrollView(
+        child: Container(
+          height: h,
+          child: Column(
+            children: [
+              SizedBox(
+                height: h * 0.12,
+              ),
+              Center(
+                child: Container(
+                  width: h * 0.115,
+                  height: h * 0.115,
+                  margin: EdgeInsets.only(bottom: h * 0.28),
+                  child: Image.asset(
+                    AppConfig.app_icon,
+                  ),
                 ),
               ),
-            ),
-            Expanded(
-              child: SingleChildScrollView(
+              Expanded(
                 child: Container(
                   width: w,
                   height: h * 0.71,
@@ -123,7 +124,9 @@ class ForgotPassword extends StatelessWidget {
                               Color(0xFFD1D3DE),
                             ),
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
                           child: Text(
                             "Back",
                             style: TextStyle(
@@ -137,8 +140,8 @@ class ForgotPassword extends StatelessWidget {
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

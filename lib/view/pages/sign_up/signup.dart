@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:tec_me/view/config/app.dart';
+import 'package:tec_me/view/pages/login/login.dart';
 
 class Signup extends StatefulWidget {
   const Signup({super.key});
@@ -122,6 +123,7 @@ class _SignupState extends State<Signup> {
                       GestureDetector(
                         onTap: () {
                           print("Clicked");
+                          Navigator.of(context).pop();
                         },
                         child: Text(
                           "Already Have an Account?",
