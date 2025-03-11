@@ -7,24 +7,28 @@ class AppDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-     double w = MediaQuery.of(context).size.width;
+    double w = MediaQuery.of(context).size.width;
     double h = MediaQuery.of(context).size.height;
+    print("Screen height $h");
+    print("Screen width $w");
     return Drawer(
-        backgroundColor: Colors.white,
-        elevation: 20,
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(32.0),
-                ),
+      backgroundColor: Colors.white,
+      elevation: 20,
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(
+                Radius.circular(32.0),
               ),
-              margin: EdgeInsets.only(
-                left: 2,
-                right: 2,
-              ),
+            ),
+            margin: EdgeInsets.only(
+              left: 2,
+              right: 2,
+            ),
+            child: SizedBox(
+              height: h > 790 ? 290 : 230,
               child: DrawerHeader(
                 decoration: BoxDecoration(color: Color(0xFFD8D8D8)),
                 child: Column(
@@ -68,75 +72,76 @@ class AppDrawer extends StatelessWidget {
                 ),
               ),
             ),
-            Container(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    height: 200,
-                  ),
-                  ListTile(
-                    trailing: Icon(Icons.keyboard_arrow_right_outlined),
-                    tileColor: Color(0xFFD8D8D8),
-                    onTap: () {},
-                    title: Text(
-                      "Edit Profile",
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontFamily: AppConfig.font_bold_family,
-                      ),
+          ),
+          Container(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  height: 200,
+                ),
+                ListTile(
+                  trailing: Icon(Icons.keyboard_arrow_right_outlined),
+                  tileColor: Color(0xFFD8D8D8),
+                  onTap: () {},
+                  title: Text(
+                    "Edit Profile",
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontFamily: AppConfig.font_bold_family,
                     ),
                   ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  ListTile(
-                    trailing: Icon(Icons.keyboard_arrow_right_outlined),
-                    tileColor: Color(0xFFD8D8D8),
-                    onTap: () {},
-                    title: Text(
-                      "History",
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontFamily: AppConfig.font_bold_family,
-                      ),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                ListTile(
+                  trailing: Icon(Icons.keyboard_arrow_right_outlined),
+                  tileColor: Color(0xFFD8D8D8),
+                  onTap: () {},
+                  title: Text(
+                    "History",
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontFamily: AppConfig.font_bold_family,
                     ),
                   ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  ListTile(
-                    trailing: Icon(Icons.keyboard_arrow_right_outlined),
-                    tileColor: Color(0xFFD8D8D8),
-                    onTap: () {},
-                    title: Text(
-                      "Add Vehicle",
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontFamily: AppConfig.font_bold_family,
-                      ),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                ListTile(
+                  trailing: Icon(Icons.keyboard_arrow_right_outlined),
+                  tileColor: Color(0xFFD8D8D8),
+                  onTap: () {},
+                  title: Text(
+                    "Add Vehicle",
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontFamily: AppConfig.font_bold_family,
                     ),
                   ),
-                  SizedBox(
-                    height: 50,
-                  ),
-                  ListTile(
-                    trailing: Icon(Icons.logout),
-                    tileColor: Color(0xFFD8D8D8),
-                    onTap: () {},
-                    title: Text(
-                      "Sign Out",
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontFamily: AppConfig.font_bold_family,
-                      ),
+                ),
+                SizedBox(
+                  height: 50,
+                ),
+                ListTile(
+                  trailing: Icon(Icons.logout),
+                  tileColor: Color(0xFFD8D8D8),
+                  onTap: () {},
+                  title: Text(
+                    "Sign Out",
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontFamily: AppConfig.font_bold_family,
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
-        ),
-      );
+          ),
+        ],
+      ),
+    );
   }
 }
