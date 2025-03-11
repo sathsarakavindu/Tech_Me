@@ -110,8 +110,72 @@ class _DashboardPageState extends State<DashboardPage> {
                 ),
               ),
             ),
-            Column(
-              children: [],
+            Container(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    height: 200,
+                  ),
+                  ListTile(
+                    trailing: Icon(Icons.keyboard_arrow_right_outlined),
+                    tileColor: Color(0xFFD8D8D8),
+                    onTap: () {},
+                    title: Text(
+                      "Edit Profile",
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontFamily: AppConfig.font_bold_family,
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  ListTile(
+                    trailing: Icon(Icons.keyboard_arrow_right_outlined),
+                    tileColor: Color(0xFFD8D8D8),
+                    onTap: () {},
+                    title: Text(
+                      "History",
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontFamily: AppConfig.font_bold_family,
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  ListTile(
+                    trailing: Icon(Icons.keyboard_arrow_right_outlined),
+                    tileColor: Color(0xFFD8D8D8),
+                    onTap: () {},
+                    title: Text(
+                      "Add Vehicle",
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontFamily: AppConfig.font_bold_family,
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 50,
+                  ),
+                  ListTile(
+                    trailing: Icon(Icons.logout),
+                    tileColor: Color(0xFFD8D8D8),
+                    onTap: () {},
+                    title: Text(
+                      "Sign Out",
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontFamily: AppConfig.font_bold_family,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
