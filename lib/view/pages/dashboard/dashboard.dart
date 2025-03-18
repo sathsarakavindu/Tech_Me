@@ -6,6 +6,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:tec_me/view/config/app.dart';
 import 'package:tec_me/view/widgets/drawer.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -143,7 +144,15 @@ class _DashboardPageState extends State<DashboardPage> {
                     height: 30,
                   ),
                   GestureDetector(
-                    onTap: () {},
+                    onTap: () async {
+                      const phoneNumber =
+                          "tel:+1234567890"; // Replace with your phone number
+                      if (await canLaunch(phoneNumber)) {
+                        await launch(phoneNumber);
+                      } else {
+                        throw 'Could not launch $phoneNumber';
+                      }
+                    },
                     child: Image.asset(
                       "assets/images/dashboard/ic_call.png",
                       width: w * 0.10,
