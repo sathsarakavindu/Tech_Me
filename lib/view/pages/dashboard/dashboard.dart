@@ -6,6 +6,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:tec_me/view/config/app.dart';
 import 'package:tec_me/view/widgets/drawer.dart';
+import 'package:tec_me/view/widgets/notification_success_card.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DashboardPage extends StatefulWidget {
