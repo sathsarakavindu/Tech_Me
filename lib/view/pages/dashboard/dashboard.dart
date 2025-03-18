@@ -57,7 +57,7 @@ class _DashboardPageState extends State<DashboardPage> {
 
   static const CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(37.42796133580664, -122.085749655962),
-    zoom: 14.4746,
+    zoom: 15.4746,
   );
 
   static const CameraPosition _kLake = CameraPosition(
@@ -70,7 +70,137 @@ class _DashboardPageState extends State<DashboardPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    print("Positon ${_determinePosition.toString()}");
+    print("Positon ${_determinePosition}");
+  }
+
+  void selectedUserBottom(double w, double h) {
+    showModalBottomSheet(
+      backgroundColor: Color(0xFFF1ECD1),
+      showDragHandle: true,
+      context: context,
+      isScrollControlled: true,
+      builder: (context) {
+        return DraggableScrollableSheet(
+          expand: false,
+          initialChildSize: 0.50,
+          minChildSize: 0.4,
+          maxChildSize: 1.0,
+          builder: (context, scrollController) {
+            return Container(
+              width: double.infinity,
+              color: Color(0xFFF1ECD1),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    "assets/images/drawer/ic_default_user.png",
+                    width: w * 0.12,
+                    height: w * 0.12,
+                  ),
+                  Text(
+                    textAlign: TextAlign.center,
+                    "Dilan Ekanayake",
+                    style: TextStyle(
+                      fontFamily: AppConfig.font_bold_family,
+                    ),
+                  ),
+                  Text(
+                    textAlign: TextAlign.center,
+                    "WP-CAD - 5617",
+                    style: TextStyle(
+                      fontFamily: AppConfig.font_bold_family,
+                    ),
+                  ),
+                  Text(
+                    textAlign: TextAlign.center,
+                    "SUZUKI ALTO 2017",
+                    style: TextStyle(
+                      fontFamily: AppConfig.font_bold_family,
+                    ),
+                  ),
+                  Text(
+                    textAlign: TextAlign.center,
+                    "0710354879",
+                    style: TextStyle(
+                      fontFamily: AppConfig.font_bold_family,
+                    ),
+                  ),
+                  Text(
+                    textAlign: TextAlign.center,
+                    "428/A, Gonawala, Kelaniya.",
+                    style: TextStyle(
+                      fontFamily: AppConfig.font_bold_family,
+                    ),
+                  ),
+                  Text(
+                    textAlign: TextAlign.center,
+                    "The Engine Fault. ",
+                    style: TextStyle(
+                        fontFamily: AppConfig.font_bold_family,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(
+                    height: 30,
+                  ),
+                  GestureDetector(
+                    onTap: () {},
+                    child: Image.asset(
+                      "assets/images/dashboard/ic_call.png",
+                      width: w * 0.10,
+                      height: w * 0.10,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(12.0),
+                            ),
+                          ),
+                        ),
+                        onPressed: () {},
+                        child: Text(
+                          "Approve",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontFamily: AppConfig.font_bold_family,
+                          ),
+                        ),
+                      ),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.grey,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(12.0),
+                            ),
+                          ),
+                        ),
+                        onPressed: () {},
+                        child: Text(
+                          "Cancel",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontFamily: AppConfig.font_bold_family,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
   }
 
   @override
@@ -131,7 +261,7 @@ class _DashboardPageState extends State<DashboardPage> {
                   ),
                 ),
                 child: GoogleMap(
-                  mapType: MapType.hybrid,
+                  mapType: MapType.terrain,
                   initialCameraPosition: _kGooglePlex,
                   onMapCreated: (GoogleMapController controller) {
                     _controller.complete(controller);
@@ -154,10 +284,16 @@ class _DashboardPageState extends State<DashboardPage> {
             SizedBox(
               height: 20,
             ),
-            Image.asset(
-              "assets/icons/dashboard_icon/ic_find_location.png",
-              width: 50,
-              height: 50,
+            InkWell(
+              onTap: () {
+                print("Clicked map");
+                selectedUserBottom(w, h);
+              },
+              child: Image.asset(
+                "assets/icons/dashboard_icon/ic_find_location.png",
+                width: 50,
+                height: 50,
+              ),
             ),
           ],
         ),
