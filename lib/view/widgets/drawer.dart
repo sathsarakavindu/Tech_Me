@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:tec_me/view/config/app.dart';
+import 'package:tec_me/view/pages/add_vehicle_page/add_vehicle.dart';
 
 class AppDrawer extends StatelessWidget {
   const AppDrawer({super.key});
@@ -113,7 +114,21 @@ class AppDrawer extends StatelessWidget {
                 ListTile(
                   trailing: Icon(Icons.keyboard_arrow_right_outlined),
                   tileColor: Color(0xFFD8D8D8),
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      PageRouteBuilder(
+                        pageBuilder: (context, animation, secondaryAnimation) =>
+                            AddVehicle(),
+                        transitionsBuilder:
+                            (context, animation, secondaryAnimation, child) =>
+                                FadeTransition(
+                          opacity: animation,
+                          child: child,
+                        ),
+                      ),
+                    );
+                  },
                   title: Text(
                     "Add Vehicle",
                     style: TextStyle(
