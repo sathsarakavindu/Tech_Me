@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:tec_me/view/config/app.dart';
 import 'package:tec_me/view/pages/add_vehicle_page/add_vehicle.dart';
+import 'package:tec_me/view/pages/edit_vehicle_page/edit_vehicle_page.dart';
 
 class AppDrawer extends StatelessWidget {
   const AppDrawer({super.key});
@@ -115,11 +116,24 @@ class AppDrawer extends StatelessWidget {
                   trailing: Icon(Icons.keyboard_arrow_right_outlined),
                   tileColor: Color(0xFFD8D8D8),
                   onTap: () {
+                    // Navigator.push(
+                    //   context,
+                    //   PageRouteBuilder(
+                    //     pageBuilder: (context, animation, secondaryAnimation) =>
+                    //         AddVehicle(),
+                    //     transitionsBuilder:
+                    //         (context, animation, secondaryAnimation, child) =>
+                    //             FadeTransition(
+                    //       opacity: animation,
+                    //       child: child,
+                    //     ),
+                    //   ),
+                    // );
                     Navigator.push(
                       context,
                       PageRouteBuilder(
                         pageBuilder: (context, animation, secondaryAnimation) =>
-                            AddVehicle(),
+                            EditVehiclePage(),
                         transitionsBuilder:
                             (context, animation, secondaryAnimation, child) =>
                                 FadeTransition(
