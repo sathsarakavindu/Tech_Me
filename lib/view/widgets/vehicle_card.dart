@@ -9,7 +9,13 @@ class VehicleCard extends StatelessWidget {
   String color;
   String year;
 
- VehicleCard({super.key, required this.image, required this.vehicle_name, required this.vehicle_no, required this.color, required this.year});
+  VehicleCard(
+      {super.key,
+      required this.image,
+      required this.vehicle_name,
+      required this.vehicle_no,
+      required this.color,
+      required this.year});
 
   @override
   Widget build(BuildContext context) {
@@ -19,12 +25,15 @@ class VehicleCard extends StatelessWidget {
       children: [
         Container(
           width: w * 0.75,
+          height: w * 0.32,
           decoration: BoxDecoration(
+            border: Border.all(color: Colors.black),
             color: Color(0xFFD9D9D9),
-            borderRadius: BorderRadius.circular(12.0),
+            borderRadius: BorderRadius.circular(15.0),
           ),
           child: Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding:
+                const EdgeInsets.only(left: 8.0, right: 8.0, top: 8, bottom: 8),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -41,12 +50,17 @@ class VehicleCard extends StatelessWidget {
                 Column(
                   children: [
                     Center(
-                      child: Text(
-                        vehicle_name,
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontFamily: AppConfig.font_bold_family,
-                            fontWeight: FontWeight.bold),
+                      child: Container(
+                        width: w * 0.35,
+                        child: Text(
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          vehicle_name,
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontFamily: AppConfig.font_bold_family,
+                              fontWeight: FontWeight.bold),
+                        ),
                       ),
                     ),
                     Text(

@@ -29,13 +29,6 @@ class _TestPageState extends State<TestPage> {
                   year: "2017",
                 ),
               ),
-              VehicleCard(
-                image: "assets/images/add_vehicle/car1.png",
-                vehicle_name: "MARUTI SUZUKI ALTO",
-                vehicle_no: "WP-CAD-5617",
-                color: "GREY",
-                year: "2017",
-              ),
             ],
           ),
         ),
