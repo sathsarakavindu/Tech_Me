@@ -1,6 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:tec_me/view/config/app.dart';
 import 'package:tec_me/view/widgets/text_form_field.dart';
 import 'package:tec_me/view_model/bloc/addVehicleBloc/bloc/add_vehicle_bloc.dart';
@@ -19,6 +24,58 @@ class _AddVehicleState extends State<AddVehicle> {
   TextEditingController color_controller = TextEditingController();
 
   final AddVehicleBloc addVehicleBloc = AddVehicleBloc();
+
+  File? _imageFile;
+
+  Future<void> pickImage() async {
+    try {
+      final pickedFile =
+          await ImagePicker().pickImage(source: ImageSource.gallery);
+
+      if (pickedFile != null) {
+        setState(() {
+          _imageFile = File(pickedFile.path);
+        });
+      }
+    } catch (e) {
+      print("Image uploading error is $e");
+    }
+  }
+
+  Future<void> uploadToSupabase() async {
+    try {
+      if (_imageFile == null) return;
+
+      if (_imageFile != null) {
+        print("Image file isn't null");
+        print(_imageFile);
+      }
+
+      final supabase = Supabase.instance.client;
+      final fileName = basename(_imageFile!.path); // e.g., image.jpg
+
+      final fileBytes = await _imageFile!.readAsBytes();
+
+      final response = await supabase.storage
+          .from('images') // your bucket name
+          .uploadBinary(
+            'vehicle images/$fileName', // path inside the bucket
+            fileBytes,
+            fileOptions: const FileOptions(cacheControl: '3600', upsert: false),
+          );
+
+      if (response.isNotEmpty) {
+        final publicURL =
+            supabase.storage.from('images').getPublicUrl('uploads/$fileName');
+        print("✅ Uploaded Successfully: $publicURL");
+      } else {
+        print("❌ Upload failed");
+      }
+    } catch (e) {
+      print("Image add error to supabase: ${e.toString()}");
+    }
+  }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -59,7 +116,9 @@ class _AddVehicleState extends State<AddVehicle> {
                         ),
                         Center(
                           child: InkWell(
-                            onTap: () {},
+                            onTap: () async {
+                              await pickImage();
+                            },
                             child: Image.asset(
                               "assets/images/add_vehicle/img_add_vehicle.png",
                               color: Colors.black,
@@ -122,15 +181,16 @@ class _AddVehicleState extends State<AddVehicle> {
                                       BorderRadius.all(Radius.circular(12.0)),
                                 ),
                                 backgroundColor: Color(0xFFC7C7C7)),
-                            onPressed: () {
-                              addVehicleBloc.add(
-                                AddVehicleButtonClickedEvent(
-                                  vehicle_no: vehicle_no_controller.text.trim(),
-                                  model: model_controller.text.trim(),
-                                  type: type_controller.text.trim(),
-                                  color: color_controller.text.trim(),
-                                ),
-                              );
+                            onPressed: () async {
+                              await uploadToSupabase();
+                              // addVehicleBloc.add(
+                              //   AddVehicleButtonClickedEvent(
+                              //     vehicle_no: vehicle_no_controller.text.trim(),
+                              //     model: model_controller.text.trim(),
+                              //     type: type_controller.text.trim(),
+                              //     color: color_controller.text.trim(),
+                              //   ),
+                              // );
                             },
                             child: Text(
                               "Add",
