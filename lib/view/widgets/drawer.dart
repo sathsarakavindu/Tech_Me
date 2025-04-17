@@ -187,7 +187,7 @@ class _AppDrawerState extends State<AppDrawer> {
                       context,
                       PageRouteBuilder(
                         pageBuilder: (context, animation, secondaryAnimation) =>
-                            EditVehiclePage(),
+                            AddVehicle(),
                         transitionsBuilder:
                             (context, animation, secondaryAnimation, child) =>
                                 FadeTransition(

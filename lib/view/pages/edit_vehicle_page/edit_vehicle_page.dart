@@ -11,6 +11,11 @@ class EditVehiclePage extends StatefulWidget {
 }
 
 class _EditVehiclePageState extends State<EditVehiclePage> {
+  TextEditingController vehicle_no_controller = TextEditingController();
+  TextEditingController model_controller = TextEditingController();
+  TextEditingController type_controller = TextEditingController();
+  TextEditingController color_controller = TextEditingController();
+ 
   @override
   Widget build(BuildContext context) {
     double w = MediaQuery.of(context).size.width;
@@ -59,20 +64,26 @@ class _EditVehiclePageState extends State<EditVehiclePage> {
                   height: 20,
                 ),
                 TextFormAdd(
+                  controller: vehicle_no_controller,
                     hint_text: "EX: WP-CAD - 5617", field_name: "Vehicle No"),
                 SizedBox(
                   height: 20,
                 ),
                 TextFormAdd(
+                  controller: model_controller,
                     hint_text: "EX: SUZUKI ALTO 2017", field_name: "Model"),
                 SizedBox(
                   height: 20,
                 ),
-                TextFormAdd(hint_text: "Vehicle Type", field_name: "Type"),
+                TextFormAdd(
+                  controller: type_controller,
+                  hint_text: "Vehicle Type", field_name: "Type"),
                 SizedBox(
                   height: 20,
                 ),
-                TextFormAdd(hint_text: "EX: Black", field_name: "Color"),
+                TextFormAdd(
+                  controller: color_controller,
+                  hint_text: "EX: Black", field_name: "Color"),
                 SizedBox(
                   height: 20,
                 ),

@@ -11,12 +11,16 @@ class AddVehicle extends StatefulWidget {
 }
 
 class _AddVehicleState extends State<AddVehicle> {
+  TextEditingController vehicle_no_controller = TextEditingController();
+  TextEditingController model_controller = TextEditingController();
+  TextEditingController type_controller = TextEditingController();
+  TextEditingController color_controller = TextEditingController();
   @override
   Widget build(BuildContext context) {
     double w = MediaQuery.of(context).size.width;
     double h = MediaQuery.of(context).size.height;
     return Scaffold(
-      backgroundColor: Color(0xFFD9D9D9),
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Container(
           child: SingleChildScrollView(
@@ -58,6 +62,7 @@ class _AddVehicleState extends State<AddVehicle> {
                   height: 20,
                 ),
                 TextFormAdd(
+                  controller: vehicle_no_controller,
                   field_name: "Vehicle No",
                   hint_text: "EX: WP-CAD-5617",
                 ),
@@ -65,6 +70,7 @@ class _AddVehicleState extends State<AddVehicle> {
                   height: 20,
                 ),
                 TextFormAdd(
+                  controller: model_controller,
                   field_name: "Model",
                   hint_text: "EX: SUZUKI ALTO 2017",
                 ),
@@ -72,6 +78,7 @@ class _AddVehicleState extends State<AddVehicle> {
                   height: 20,
                 ),
                 TextFormAdd(
+                  controller: type_controller,
                   field_name: "Type",
                   hint_text: "Vehicle Type",
                 ),
@@ -79,6 +86,7 @@ class _AddVehicleState extends State<AddVehicle> {
                   height: 20,
                 ),
                 TextFormAdd(
+                  controller: color_controller,
                   field_name: "Color",
                   hint_text: "EX: Black",
                 ),
@@ -93,7 +101,12 @@ class _AddVehicleState extends State<AddVehicle> {
                           borderRadius: BorderRadius.all(Radius.circular(12.0)),
                         ),
                         backgroundColor: Color(0xFFC7C7C7)),
-                    onPressed: () {},
+                    onPressed: () {
+                      print(vehicle_no_controller.text.trim());
+                      print(model_controller.text.trim());
+                      print(type_controller.text.trim());
+                      print(color_controller.text.trim());
+                    },
                     child: Text(
                       "Add",
                       style: TextStyle(

@@ -5,7 +5,8 @@ import 'package:tec_me/view/config/app.dart';
 class TextFormAdd extends StatelessWidget {
   String hint_text;
   String field_name;
-  TextFormAdd({super.key, required this.hint_text, required this.field_name});
+  TextEditingController controller = TextEditingController();
+  TextFormAdd({super.key, required this.hint_text, required this.field_name, required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +28,7 @@ class TextFormAdd extends StatelessWidget {
           Container(
             margin: EdgeInsets.only(left: 8, right: 8),
             child: TextFormField(
+              controller: controller,
               textAlign: TextAlign.center,
               decoration: InputDecoration(
                 hintText: hint_text,
