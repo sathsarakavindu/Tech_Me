@@ -1,9 +1,63 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:tec_me/view/config/app.dart';
+import 'package:tec_me/view/pages/add_vehicle_page/add_vehicle.dart';
+import 'package:tec_me/view/pages/edit_vehicle_page/edit_vehicle_page.dart';
+import 'package:tec_me/view/pages/history/history_technician.dart';
+import 'package:tec_me/view/widgets/vehicle_card.dart';
 
-class AppDrawer extends StatelessWidget {
+class AppDrawer extends StatefulWidget {
   const AppDrawer({super.key});
+
+  @override
+  State<AppDrawer> createState() => _AppDrawerState();
+}
+
+class _AppDrawerState extends State<AppDrawer> {
+  void _openBottomSheetCalender() {
+    final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
+    showModalBottomSheet(
+        isScrollControlled: true,
+        showDragHandle: true,
+        context: context,
+        backgroundColor: Color(0XFFEDECE5),
+        builder: (context) {
+          return DraggableScrollableSheet(
+            expand: false,
+            initialChildSize: 0.95,
+            minChildSize: 0.4,
+            maxChildSize: 1.0,
+            builder: (context, scrollController) {
+              return Container(
+                width: width,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      "History",
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontFamily: AppConfig.font_bold_family,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(
+                      height: width * 0.10,
+                    ),
+                    VehicleCard(
+                      image: "assets/images/add_vehicle/car1.png",
+                      vehicle_name: "MARUTI SUZUKI ALTO",
+                      vehicle_no: "WP-CAD-5617",
+                      color: "GREY",
+                      year: "2017",
+                    ),
+                  ],
+                ),
+              );
+            },
+          );
+        });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -98,7 +152,9 @@ class AppDrawer extends StatelessWidget {
                 ListTile(
                   trailing: Icon(Icons.keyboard_arrow_right_outlined),
                   tileColor: Color(0xFFD8D8D8),
-                  onTap: () {},
+                  onTap: () {
+                    _openBottomSheetCalender();
+                  },
                   title: Text(
                     "History",
                     style: TextStyle(
@@ -113,7 +169,34 @@ class AppDrawer extends StatelessWidget {
                 ListTile(
                   trailing: Icon(Icons.keyboard_arrow_right_outlined),
                   tileColor: Color(0xFFD8D8D8),
-                  onTap: () {},
+                  onTap: () {
+                    // Navigator.push(
+                    //   context,
+                    //   PageRouteBuilder(
+                    //     pageBuilder: (context, animation, secondaryAnimation) =>
+                    //         AddVehicle(),
+                    //     transitionsBuilder:
+                    //         (context, animation, secondaryAnimation, child) =>
+                    //             FadeTransition(
+                    //       opacity: animation,
+                    //       child: child,
+                    //     ),
+                    //   ),
+                    // );
+                    Navigator.push(
+                      context,
+                      PageRouteBuilder(
+                        pageBuilder: (context, animation, secondaryAnimation) =>
+                            AddVehicle(),
+                        transitionsBuilder:
+                            (context, animation, secondaryAnimation, child) =>
+                                FadeTransition(
+                          opacity: animation,
+                          child: child,
+                        ),
+                      ),
+                    );
+                  },
                   title: Text(
                     "Add Vehicle",
                     style: TextStyle(
