@@ -24,6 +24,7 @@ class _AddVehicleState extends State<AddVehicle> {
   TextEditingController color_controller = TextEditingController();
 
   final AddVehicleBloc addVehicleBloc = AddVehicleBloc();
+  String publicURL = '';
 
   File? _imageFile;
 
@@ -65,7 +66,7 @@ class _AddVehicleState extends State<AddVehicle> {
           );
 
       if (response.isNotEmpty) {
-        final publicURL =
+        publicURL =
             supabase.storage.from('images').getPublicUrl('uploads/$fileName');
         print("✅ Uploaded Successfully: $publicURL");
       } else {
@@ -183,14 +184,15 @@ class _AddVehicleState extends State<AddVehicle> {
                                 backgroundColor: Color(0xFFC7C7C7)),
                             onPressed: () async {
                               await uploadToSupabase();
-                              // addVehicleBloc.add(
-                              //   AddVehicleButtonClickedEvent(
-                              //     vehicle_no: vehicle_no_controller.text.trim(),
-                              //     model: model_controller.text.trim(),
-                              //     type: type_controller.text.trim(),
-                              //     color: color_controller.text.trim(),
-                              //   ),
-                              // );
+                              addVehicleBloc.add(
+                                AddVehicleButtonClickedEvent(
+                                  image_url: publicURL,
+                                  vehicle_no: vehicle_no_controller.text.trim(),
+                                  model: model_controller.text.trim(),
+                                  type: type_controller.text.trim(),
+                                  color: color_controller.text.trim(),
+                                ),
+                              );
                             },
                             child: Text(
                               "Add",
