@@ -83,7 +83,7 @@ class _LoginState extends State<Login> {
                               height: h * 0.035,
                             ),
                             SizedBox(
-                              width: w * 0.80,
+                              width: w * 0.90,
                               child: TextFormField(
                                 controller: email_controller,
                                 decoration: InputDecoration(
@@ -103,7 +103,7 @@ class _LoginState extends State<Login> {
                               height: h * 0.035,
                             ),
                             SizedBox(
-                              width: w * 0.80,
+                              width: w * 0.90,
                               child: TextFormField(
                                 controller: password_controller,
                                 decoration: InputDecoration(
@@ -123,7 +123,7 @@ class _LoginState extends State<Login> {
                               height: h * 0.035,
                             ),
                             Container(
-                              width: w * 0.80,
+                              width: w * 0.90,
                               height: h * 0.07,
                               child: ElevatedButton(
                                 style: ButtonStyle(
@@ -138,9 +138,11 @@ class _LoginState extends State<Login> {
                                   ),
                                 ),
                                 onPressed: () async {
-                                  loginInitialBloc.add(LoginButtonClickEvent(
-                                      email: email_controller.text,
-                                      password: password_controller.text));
+                                  loginInitialBloc.add(
+                                    LoginButtonClickEvent(
+                                        email: email_controller.text,
+                                        password: password_controller.text),
+                                  );
                                   // await userAuth.signinUser(
                                   //     email_controller.text.trim(),
                                   //     password_controller.text.trim());

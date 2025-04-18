@@ -16,6 +16,7 @@ class _SignupState extends State<Signup> {
   final SignupBloc signupBloc = SignupBloc();
   TextEditingController email_controller = TextEditingController();
   TextEditingController password_controller = TextEditingController();
+  TextEditingController name_controller = TextEditingController();
   @override
   void initState() {
     super.initState();
@@ -52,17 +53,17 @@ class _SignupState extends State<Signup> {
                       ),
                     ),
                     Expanded(
-                      child: SingleChildScrollView(
-                        child: Container(
-                          width: w,
-                          height: h * 0.71,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(40.0),
-                              topRight: Radius.circular(40.0),
-                            ),
+                      child: Container(
+                        width: w,
+                        height: h * 0.71,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(40.0),
+                            topRight: Radius.circular(40.0),
                           ),
+                        ),
+                        child: SingleChildScrollView(
                           child: Column(
                             children: [
                               SizedBox(
@@ -78,7 +79,27 @@ class _SignupState extends State<Signup> {
                                 height: h * 0.035,
                               ),
                               SizedBox(
-                                width: w * 0.80,
+                                width: w * 0.90,
+                                child: TextFormField(
+                                  controller: name_controller,
+                                  decoration: InputDecoration(
+                                    hintStyle: TextStyle(
+                                        fontFamily:
+                                            AppConfig.font_regular_family),
+                                    filled: true,
+                                    fillColor: const Color(0xFFD9D9D9),
+                                    hintText: "Enter Name",
+                                    border: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(12.0)),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                height: h * 0.035,
+                              ),
+                              SizedBox(
+                                width: w * 0.90,
                                 child: TextFormField(
                                   controller: email_controller,
                                   decoration: InputDecoration(
@@ -98,7 +119,7 @@ class _SignupState extends State<Signup> {
                                 height: h * 0.035,
                               ),
                               SizedBox(
-                                width: w * 0.80,
+                                width: w * 0.90,
                                 child: TextFormField(
                                   controller: password_controller,
                                   decoration: InputDecoration(
@@ -118,7 +139,7 @@ class _SignupState extends State<Signup> {
                                 height: h * 0.035,
                               ),
                               Container(
-                                width: w * 0.80,
+                                width: w * 0.90,
                                 height: h * 0.07,
                                 child: ElevatedButton(
                                   style: ButtonStyle(
@@ -136,6 +157,7 @@ class _SignupState extends State<Signup> {
                                   onPressed: () async {
                                     signupBloc.add(
                                       SignupButtonClickedEvent(
+                                        name: name_controller.text.trim(),
                                         email: email_controller.text.trim(),
                                         password:
                                             password_controller.text.trim(),
