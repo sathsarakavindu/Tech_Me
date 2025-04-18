@@ -8,14 +8,14 @@ import 'package:tec_me/view/widgets/vehicle_card.dart';
 import 'package:tec_me/view_model/bloc/dashboardBloc/bloc/dashboard_bloc_bloc.dart';
 import 'package:tec_me/view_model/persistence/sharedPreferences.dart';
 
-class TestPage extends StatefulWidget {
-  const TestPage({super.key});
+class DashboardNew extends StatefulWidget {
+  const DashboardNew({super.key});
 
   @override
-  State<TestPage> createState() => _TestPageState();
+  State<DashboardNew> createState() => _DashboardNewState();
 }
 
-class _TestPageState extends State<TestPage> {
+class _DashboardNewState extends State<DashboardNew> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
   String? username;
