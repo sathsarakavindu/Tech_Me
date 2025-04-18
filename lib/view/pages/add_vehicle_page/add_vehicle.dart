@@ -27,6 +27,16 @@ class _AddVehicleState extends State<AddVehicle> {
   String publicURL = '';
 
   File? _imageFile;
+  String? selectedValue; // currently selected value
+
+  final List<String> items = [
+    'Car',
+    'Van',
+    'Bike',
+    'Three-wheel',
+    'Lorry',
+    'Truck'
+  ];
 
   Future<void> pickImage() async {
     try {
@@ -90,6 +100,7 @@ class _AddVehicleState extends State<AddVehicle> {
   Widget build(BuildContext context) {
     double w = MediaQuery.of(context).size.width;
     double h = MediaQuery.of(context).size.height;
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -157,10 +168,72 @@ class _AddVehicleState extends State<AddVehicle> {
                         SizedBox(
                           height: 20,
                         ),
-                        TextFormAdd(
-                          controller: type_controller,
-                          field_name: "Type",
-                          hint_text: "Vehicle Type",
+                        // TextFormAdd(
+                        //   controller: type_controller,
+                        //   field_name: "Type",
+                        //   hint_text: "Vehicle Type",
+                        // ),
+                        Container(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                margin: EdgeInsets.only(left: 8),
+                                child: Text(
+                                  "Type",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontFamily: AppConfig.font_bold_family,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                padding: EdgeInsets.symmetric(horizontal: 12),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(12.0),
+                                  border: Border.all(
+                                    color: Colors.black,
+                                  ),
+                                ),
+                                width: w,
+                                height: w *
+                                    0.15, // ⬆️ Increase this to make the dropdown taller
+                                margin: EdgeInsets.symmetric(horizontal: 8),
+                                child: DropdownButtonHideUnderline(
+                                  child: DropdownButton<String>(
+                                    isExpanded: true,
+                                    iconSize:
+                                        28, // ⬆️ Optional: increase dropdown icon size
+                                    borderRadius: BorderRadius.circular(12.0),
+                                    hint: Text("Select Vehicle",
+                                        style: TextStyle(fontSize: 16)),
+                                    value: selectedValue,
+                                    onChanged: (String? newValue) {
+                                      if (newValue != null) {
+                                        addVehicleBloc.add(
+                                          SelectVehicleListClickedEvent(
+                                              vehicle_type: newValue),
+                                        );
+                                      }
+                                    },
+                                    items: items.map((String item) {
+                                      return DropdownMenuItem<String>(
+                                        value: item,
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical:
+                                                  12.0), // ⬆️ Increases item height
+                                          child: Text(item,
+                                              style: TextStyle(fontSize: 16)),
+                                        ),
+                                      );
+                                    }).toList(),
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
                         ),
                         SizedBox(
                           height: 20,
@@ -228,6 +301,12 @@ class _AddVehicleState extends State<AddVehicle> {
                     duration: Duration(seconds: 2),
                   ),
                 );
+              } else if (state.runtimeType == SelectedVehicleState) {
+                final successState = state as SelectedVehicleState;
+                print(successState.type);
+                setState(() {
+                  selectedValue = successState.type;
+                });
               }
             },
           ),
