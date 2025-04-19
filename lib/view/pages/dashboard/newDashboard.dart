@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_notch_bottom_bar.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,10 +18,13 @@ class DashboardNew extends StatefulWidget {
 
 class _DashboardNewState extends State<DashboardNew> {
   final PageController _pageController = PageController();
+
   int _currentPage = 0;
   String? username;
 
   final DashboardBlocBloc dashboardBlocBloc = DashboardBlocBloc();
+  final NotchBottomBarController _controller =
+      NotchBottomBarController(index: 0);
 
   final List<String> _images = [
     'assets/images/dashboard/repair_image.png',
@@ -177,6 +181,56 @@ class _DashboardNewState extends State<DashboardNew> {
             listener: (context, state) {},
           ),
         ),
+      ),
+      bottomNavigationBar: AnimatedNotchBottomBar(
+        notchBottomBarController: _controller,
+        bottomBarItems: [
+          BottomBarItem(
+            inActiveItem: Icon(
+              Icons.home_filled,
+              color: Colors.black,
+            ),
+            activeItem: Icon(
+              Icons.home_filled,
+              color: Colors.black,
+            ),
+            itemLabel: 'Home',
+          ),
+          BottomBarItem(
+            inActiveItem: Image.asset(
+              "assets/images/add_vehicle/add_vehicle.png",
+              color: Colors.black,
+            ),
+            activeItem: Image.asset("assets/images/add_vehicle/add_vehicle.png",
+                color: Colors.black),
+            itemLabel: 'Vehicle',
+          ),
+          BottomBarItem(
+            inActiveItem: Icon(
+              Icons.history,
+              color: Colors.black,
+            ),
+            activeItem: Icon(
+              Icons.history,
+              color: Colors.black,
+            ),
+            itemLabel: 'History',
+          ),
+          BottomBarItem(
+            inActiveItem: Icon(
+              Icons.person,
+              color: Colors.black,
+            ),
+            activeItem: Icon(
+              Icons.person,
+              color: Colors.black,
+            ),
+            itemLabel: 'Account',
+          ),
+        ],
+        onTap: (value) {},
+        kIconSize: 30,
+        kBottomRadius: 12.0,
       ),
     );
   }
