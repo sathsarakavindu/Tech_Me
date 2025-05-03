@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tec_me/view/config/app.dart';
 import 'package:tec_me/view/pages/add_vehicle_page/add_vehicle.dart';
+import 'package:tec_me/view/pages/history/history_technician.dart';
 import 'package:tec_me/view/widgets/vehicle_card.dart';
 import 'package:tec_me/view_model/bloc/dashboardBloc/bloc/dashboard_bloc_bloc.dart';
 import 'package:tec_me/view_model/persistence/sharedPreferences.dart';
@@ -184,7 +185,7 @@ class _DashboardNewState extends State<DashboardNew> {
         ),
       ),
       bottomNavigationBar: AnimatedNotchBottomBar(
-        
+        durationInMilliSeconds: 500,
         notchBottomBarController: _controller,
         bottomBarItems: [
           BottomBarItem(
@@ -254,6 +255,19 @@ class _DashboardNewState extends State<DashboardNew> {
               );
               break;
             case 2:
+              Navigator.push(
+                context,
+                PageRouteBuilder(
+                  pageBuilder: (context, animation, secondaryAnimation) =>
+                      HistoryTechnician(),
+                  transitionsBuilder:
+                      (context, animation, secondaryAnimation, child) =>
+                          FadeTransition(
+                    opacity: animation,
+                    child: child,
+                  ),
+                ),
+              );
               break;
             case 3:
               break;

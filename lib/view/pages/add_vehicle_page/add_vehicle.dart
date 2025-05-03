@@ -9,6 +9,7 @@ import 'package:path/path.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:tec_me/view/config/app.dart';
 import 'package:tec_me/view/pages/dashboard/newDashboard.dart';
+import 'package:tec_me/view/pages/history/history_technician.dart';
 import 'package:tec_me/view/widgets/text_form_field.dart';
 import 'package:tec_me/view_model/bloc/addVehicleBloc/bloc/add_vehicle_bloc.dart';
 
@@ -337,6 +338,7 @@ class _AddVehicleState extends State<AddVehicle> {
         ),
       ),
       bottomNavigationBar: AnimatedNotchBottomBar(
+        durationInMilliSeconds: 500,
         notchBottomBarController: _controller,
         bottomBarItems: [
           BottomBarItem(
@@ -406,6 +408,19 @@ class _AddVehicleState extends State<AddVehicle> {
             case 1:
               break;
             case 2:
+              Navigator.push(
+                context,
+                PageRouteBuilder(
+                  pageBuilder: (context, animation, secondaryAnimation) =>
+                      HistoryTechnician(),
+                  transitionsBuilder:
+                      (context, animation, secondaryAnimation, child) =>
+                          FadeTransition(
+                    opacity: animation,
+                    child: child,
+                  ),
+                ),
+              );
               break;
             case 3:
               break;
