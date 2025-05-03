@@ -5,8 +5,16 @@ import 'package:tec_me/view/config/app.dart';
 class TextFormAdd extends StatelessWidget {
   String hint_text;
   String field_name;
+  Icon? prefix_icon;
+  Color? icon_color;
   TextEditingController controller = TextEditingController();
-  TextFormAdd({super.key, required this.hint_text, required this.field_name, required this.controller});
+  TextFormAdd(
+      {super.key,
+      this.prefix_icon,
+      this.icon_color,
+      required this.hint_text,
+      required this.field_name,
+      required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -19,10 +27,10 @@ class TextFormAdd extends StatelessWidget {
             child: Text(
               field_name,
               style: TextStyle(
-                fontSize: 16,
-                fontFamily: AppConfig.font_bold_family,
-                fontWeight: FontWeight.bold,
-              ),
+                  fontSize: 16,
+                  fontFamily: AppConfig.font_bold_family,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white),
             ),
           ),
           Container(
@@ -31,10 +39,19 @@ class TextFormAdd extends StatelessWidget {
               controller: controller,
               textAlign: TextAlign.center,
               decoration: InputDecoration(
+                prefixIcon: prefix_icon,
                 hintText: hint_text,
-                hintStyle: TextStyle(color: Colors.grey),
+                hintStyle: TextStyle(color: Colors.white),
                 border: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black),
+                  borderSide: BorderSide(color: Colors.white),
+                  borderRadius: BorderRadius.circular(12.0),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white),
+                  borderRadius: BorderRadius.circular(12.0),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white),
                   borderRadius: BorderRadius.circular(12.0),
                 ),
               ),

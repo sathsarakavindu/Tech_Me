@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tec_me/view/config/app.dart';
+import 'package:tec_me/view/pages/add_vehicle_page/add_vehicle.dart';
 import 'package:tec_me/view/widgets/vehicle_card.dart';
 import 'package:tec_me/view_model/bloc/dashboardBloc/bloc/dashboard_bloc_bloc.dart';
 import 'package:tec_me/view_model/persistence/sharedPreferences.dart';
@@ -183,6 +184,7 @@ class _DashboardNewState extends State<DashboardNew> {
         ),
       ),
       bottomNavigationBar: AnimatedNotchBottomBar(
+        
         notchBottomBarController: _controller,
         bottomBarItems: [
           BottomBarItem(
@@ -228,7 +230,35 @@ class _DashboardNewState extends State<DashboardNew> {
             itemLabel: 'Account',
           ),
         ],
-        onTap: (value) {},
+        onTap: (value) {
+          _controller.index = value;
+          if (kDebugMode) {
+            print("Selected index: $value");
+          }
+          switch (value) {
+            case 0:
+              break;
+            case 1:
+              Navigator.push(
+                context,
+                PageRouteBuilder(
+                  pageBuilder: (context, animation, secondaryAnimation) =>
+                      AddVehicle(),
+                  transitionsBuilder:
+                      (context, animation, secondaryAnimation, child) =>
+                          FadeTransition(
+                    opacity: animation,
+                    child: child,
+                  ),
+                ),
+              );
+              break;
+            case 2:
+              break;
+            case 3:
+              break;
+          }
+        },
         kIconSize: 30,
         kBottomRadius: 12.0,
       ),
