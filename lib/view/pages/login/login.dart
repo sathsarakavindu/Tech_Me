@@ -4,6 +4,7 @@ import 'package:tec_me/view/config/app.dart';
 import 'package:tec_me/view/pages/dashboard/dashboard.dart';
 import 'package:tec_me/view/pages/dashboard/newDashboard.dart';
 import 'package:tec_me/view/pages/forgot_password/forgot_password.dart';
+import 'package:tec_me/view/pages/register/register.dart';
 import 'package:tec_me/view/pages/sign_up/signup.dart';
 import 'package:tec_me/view_model/bloc/bloc/login_bloc.dart';
 import 'package:tec_me/view_model/helperClass/loginUser.dart';
@@ -182,7 +183,7 @@ class _LoginState extends State<Login> {
                                   PageRouteBuilder(
                                     pageBuilder: (context, animation,
                                             secondaryAnimation) =>
-                                        const Signup(),
+                                        const Register(),
                                     transitionsBuilder: (context, animation,
                                         secondaryAnimation, child) {
                                       return FadeTransition(
