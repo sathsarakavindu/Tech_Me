@@ -23,21 +23,23 @@ class _HistoryTechnicianState extends State<HistoryTechnician> {
       body: SafeArea(
           child: Container(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Center(
               child: Container(
                 width: w * 0.70,
-                height: w * 0.55,
+                height: w * 0.58,
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(12.0),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Container(
                       width: w * 0.15,
-                      height: w * 0.15,
+                      height: w * 0.12,
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(30.0),
                         child: Image.network(
@@ -45,12 +47,75 @@ class _HistoryTechnicianState extends State<HistoryTechnician> {
                             "https://www.shutterstock.com/image-vector/circle-line-simple-design-logo-600nw-2174926871.jpg"),
                       ),
                     ),
-                    Text("Tech Solutions (PVT)LTD",
+                    Text(
+                      "Tech Solutions (PVT)LTD",
+                      style: TextStyle(
+                          fontSize: 14,
+                          fontFamily: "Inria-sans-Regular",
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black),
+                    ),
+                    Text(
+                      "MARUTI SUZUKI ALTO",
+                      style: TextStyle(
+                          fontSize: 12,
+                          fontFamily: "Inria-sans-Regular",
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black),
+                    ),
+                    Text(
+                      "WP-CAD-5617",
+                      style: TextStyle(
+                          fontSize: 12,
+                          fontFamily: "Inria-sans-Regular",
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black),
+                    ),
+                    Text(
+                      "0764598798",
+                      style: TextStyle(
+                          fontSize: 12,
+                          fontFamily: "Inria-sans-Regular",
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black),
+                    ),
+                    Container(
+                      width: w * 0.65,
+                      child: Text(
+                        textAlign: TextAlign.center,
+                        maxLines: 2,
+                        "No 517/B, Meegahawatta, Delgoda.",
                         style: TextStyle(
-                            fontSize: 14,
+                            fontSize: 12,
                             fontFamily: "Inria-sans-Regular",
                             fontWeight: FontWeight.bold,
-                            color: Colors.black)),
+                            color: Colors.black),
+                      ),
+                    ),
+                    Text(
+                      "2024/08/12",
+                      style: TextStyle(
+                          fontSize: 12,
+                          fontFamily: "Inria-sans-Regular",
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black),
+                    ),
+                    Text(
+                      "Vehicle Service: 2023-10-10",
+                      style: TextStyle(
+                          fontSize: 12,
+                          fontFamily: "Inria-sans-Regular",
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black),
+                    ),
+                    Text(
+                      "7.20 P.M",
+                      style: TextStyle(
+                          fontSize: 12,
+                          fontFamily: "Inria-sans-Regular",
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black),
+                    ),
                   ],
                 ),
               ),
