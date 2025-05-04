@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tec_me/view/config/app.dart';
 import 'package:tec_me/view/pages/dashboard/dashboard.dart';
+import 'package:tec_me/view/pages/dashboard/newDashboard.dart';
 import 'package:tec_me/view/pages/forgot_password/forgot_password.dart';
 import 'package:tec_me/view/pages/sign_up/signup.dart';
 import 'package:tec_me/view_model/bloc/bloc/login_bloc.dart';
@@ -83,7 +84,7 @@ class _LoginState extends State<Login> {
                               height: h * 0.035,
                             ),
                             SizedBox(
-                              width: w * 0.80,
+                              width: w * 0.90,
                               child: TextFormField(
                                 controller: email_controller,
                                 decoration: InputDecoration(
@@ -103,7 +104,7 @@ class _LoginState extends State<Login> {
                               height: h * 0.035,
                             ),
                             SizedBox(
-                              width: w * 0.80,
+                              width: w * 0.90,
                               child: TextFormField(
                                 controller: password_controller,
                                 decoration: InputDecoration(
@@ -123,7 +124,7 @@ class _LoginState extends State<Login> {
                               height: h * 0.035,
                             ),
                             Container(
-                              width: w * 0.80,
+                              width: w * 0.90,
                               height: h * 0.07,
                               child: ElevatedButton(
                                 style: ButtonStyle(
@@ -138,9 +139,11 @@ class _LoginState extends State<Login> {
                                   ),
                                 ),
                                 onPressed: () async {
-                                  loginInitialBloc.add(LoginButtonClickEvent(
-                                      email: email_controller.text,
-                                      password: password_controller.text));
+                                  loginInitialBloc.add(
+                                    LoginButtonClickEvent(
+                                        email: email_controller.text,
+                                        password: password_controller.text),
+                                  );
                                   // await userAuth.signinUser(
                                   //     email_controller.text.trim(),
                                   //     password_controller.text.trim());
@@ -267,7 +270,7 @@ class _LoginState extends State<Login> {
               context,
               PageRouteBuilder(
                 pageBuilder: (context, animation, secondaryAnimation) =>
-                    DashboardPage(),
+                    DashboardNew(),
                 transitionsBuilder:
                     (context, animation, secondaryAnimation, child) =>
                         FadeTransition(
