@@ -49,6 +49,7 @@ class _RegisterTextformfieldState extends State<RegisterTextformfield> {
               borderRadius: BorderRadius.circular(12.0),
             ),
             labelText: widget.hint_text,
+            
           ),
         )
 

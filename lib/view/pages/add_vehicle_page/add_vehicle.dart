@@ -241,7 +241,7 @@ class _AddVehicleState extends State<AddVehicle> {
                                           child: Text(item,
                                               style: TextStyle(
                                                   fontSize: 16,
-                                                  color: Colors.white)),
+                                                  color: Colors.white),),
                                         ),
                                       );
                                     }).toList(),

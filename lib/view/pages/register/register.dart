@@ -20,6 +20,8 @@ class _RegisterState extends State<Register> {
   TextEditingController nic_controller = TextEditingController();
   TextEditingController address_controller = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  String? selectedValue;
+  final List<String> items = ['User', 'Technician'];
   @override
   void initState() {
     super.initState();
@@ -115,7 +117,12 @@ class _RegisterState extends State<Register> {
                     color: Colors.black,
                   ),
                   isPassword: true,
-                  validator: (p0) {},
+                  validator: (p0) {
+                    if (p0 == null || p0.isEmpty) {
+                      return 'Password is required';
+                    }
+                    return null;
+                  },
                 ),
                 SizedBox(
                   height: h * 0.035,
@@ -128,7 +135,12 @@ class _RegisterState extends State<Register> {
                     color: Colors.black,
                   ),
                   isPassword: true,
-                  validator: (p0) {},
+                  validator: (p0) {
+                    if (p0 == null || p0.isEmpty) {
+                      return 'Confirm Password is required';
+                    }
+                    return null;
+                  },
                 ),
                 SizedBox(
                   height: h * 0.035,
@@ -166,7 +178,12 @@ class _RegisterState extends State<Register> {
                     color: Colors.black,
                   ),
                   isPassword: false,
-                  validator: (p0) {},
+                  validator: (p0) {
+                    if (p0 == null || p0.isEmpty) {
+                      return 'NIC is required';
+                    }
+                    return null;
+                  },
                 ),
                 SizedBox(
                   height: h * 0.035,
@@ -179,7 +196,68 @@ class _RegisterState extends State<Register> {
                     color: Colors.black,
                   ),
                   isPassword: false,
-                  validator: (p0) {},
+                  validator: (p0) {
+                    if (p0 == null || p0.isEmpty) {
+                      return 'Address is required';
+                    }
+                    return null;
+                  },
+                ),
+                SizedBox(
+                  height: h * 0.035,
+                ),
+                Container(
+                  width: w * 0.90,
+                  padding: EdgeInsets.symmetric(horizontal: 12),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12.0),
+                    border: Border.all(
+                      color: Colors.black,
+                    ),
+                  ),
+                  margin: EdgeInsets.symmetric(horizontal: 8),
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton<String>(
+                      icon: Icon(
+                        Icons.arrow_drop_down_rounded,
+                        color: Colors.black,
+                      ),
+                      isExpanded: true,
+                      iconSize: 28, // ⬆️ Optional: increase dropdown icon size
+                      borderRadius: BorderRadius.circular(12.0),
+                      hint: Center(
+                        child: Text(
+                          "Select Account Type",
+                          style: TextStyle(
+                            fontFamily: AppConfig.font_regular_family,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
+                      value: selectedValue,
+                      onChanged: (String? newValue) {
+                        if (newValue != null) {
+                          setState(() {
+                            selectedValue = newValue;
+                          });
+                        }
+                      },
+                      items: items.map((String item) {
+                        return DropdownMenuItem<String>(
+                          value: item,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 12.0), // ⬆️ Increases item height
+                            child: Text(
+                              item,
+                              style:
+                                  TextStyle(fontSize: 16, color: Colors.black),
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
                 ),
                 SizedBox(
                   height: h * 0.035,
