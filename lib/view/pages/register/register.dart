@@ -208,7 +208,7 @@ class _RegisterState extends State<Register> {
                 ),
                 Container(
                   width: w * 0.90,
-                  padding: EdgeInsets.symmetric(horizontal: 12),
+                  // padding: EdgeInsets.symmetric(horizontal: 12),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12.0),
                     border: Border.all(
@@ -216,8 +216,53 @@ class _RegisterState extends State<Register> {
                     ),
                   ),
                   margin: EdgeInsets.symmetric(horizontal: 8),
-                  child: DropdownButtonHideUnderline(
+                  child: DropdownButtonFormField<String>(
+                    value: selectedValue,
+                    isExpanded: true,
+                    icon: Icon(Icons.arrow_drop_down_rounded,
+                        color: Colors.black),
+                    iconSize: 28,
+                    decoration: InputDecoration(
+                      contentPadding:
+                          EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12.0),
+                        borderSide: BorderSide(color: Colors.black),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12.0),
+                        borderSide: BorderSide(color: Colors.black),
+                      ),
+                    ),
+                    hint: Text(
+                      "Select Account Type",
+                      style: TextStyle(
+                        fontFamily: AppConfig.font_regular_family,
+                        color: Colors.black,
+                      ),
+                    ),
+                    items: items.map((String item) {
+                      return DropdownMenuItem<String>(
+                        value: item,
+                        child:
+                            Text(item, style: TextStyle(color: Colors.black)),
+                      );
+                    }).toList(),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        selectedValue = newValue;
+                      });
+                    },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please select an account type';
+                      }
+                      return null;
+                    },
+                  ),
+                  /* child: DropdownButtonHideUnderline(
                     child: DropdownButton<String>(
+
                       icon: Icon(
                         Icons.arrow_drop_down_rounded,
                         color: Colors.black,
@@ -255,9 +300,13 @@ class _RegisterState extends State<Register> {
                             ),
                           ),
                         );
-                      }).toList(),
+                      },
+                      
+                      ).toList(),
+                      
                     ),
                   ),
+                  */
                 ),
                 SizedBox(
                   height: h * 0.035,
