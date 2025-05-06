@@ -10,6 +10,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:tec_me/view/config/app.dart';
 import 'package:tec_me/view/pages/dashboard/newDashboard.dart';
 import 'package:tec_me/view/pages/history/history_technician.dart';
+import 'package:tec_me/view/pages/user_account_page.dart/user_account.dart';
 import 'package:tec_me/view/widgets/text_form_field.dart';
 import 'package:tec_me/view_model/bloc/addVehicleBloc/bloc/add_vehicle_bloc.dart';
 
@@ -240,7 +241,7 @@ class _AddVehicleState extends State<AddVehicle> {
                                           child: Text(item,
                                               style: TextStyle(
                                                   fontSize: 16,
-                                                  color: Colors.white)),
+                                                  color: Colors.white),),
                                         ),
                                       );
                                     }).toList(),
@@ -423,6 +424,19 @@ class _AddVehicleState extends State<AddVehicle> {
               );
               break;
             case 3:
+             Navigator.push(
+                context,
+                PageRouteBuilder(
+                  pageBuilder: (context, animation, secondaryAnimation) =>
+                      UserAccountPage(),
+                  transitionsBuilder:
+                      (context, animation, secondaryAnimation, child) =>
+                          FadeTransition(
+                    opacity: animation,
+                    child: child,
+                  ),
+                ),
+              );
               break;
           }
         },

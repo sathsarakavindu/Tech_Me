@@ -3,34 +3,23 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:tec_me/view/pages/add_vehicle_page/add_vehicle.dart';
 import 'package:tec_me/view/pages/dashboard/newDashboard.dart';
-import 'package:tec_me/view/pages/user_account_page.dart/user_account.dart';
-import 'package:tec_me/view/widgets/user_history_card.dart';
-import 'package:tec_me/view_model/bloc/user_history_bloc/bloc/user_history_bloc.dart';
+import 'package:tec_me/view/pages/history/history_technician.dart';
+import 'package:tec_me/view/widgets/account_options_card.dart';
 
-class HistoryTechnician extends StatefulWidget {
-  const HistoryTechnician({super.key});
+class UserAccountPage extends StatefulWidget {
+  const UserAccountPage({super.key});
 
   @override
-  State<HistoryTechnician> createState() => _HistoryTechnicianState();
+  State<UserAccountPage> createState() => _UserAccountPageState();
 }
 
-class _HistoryTechnicianState extends State<HistoryTechnician> {
+class _UserAccountPageState extends State<UserAccountPage> {
   final NotchBottomBarController _controller =
-      NotchBottomBarController(index: 2);
-
-  final UserHistoryBloc userHistoryBloc = UserHistoryBloc();
-
-  @override
-  void initState() {
-    super.initState();
-    userHistoryBloc.add(
-      UserHistoryCardInitialEvent(),
-    );
-  }
-
+      NotchBottomBarController(index: 3);
   @override
   Widget build(BuildContext context) {
     double w = MediaQuery.of(context).size.width;
+    double h = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: Color(0xFF000b58),
       body: SafeArea(
@@ -38,15 +27,47 @@ class _HistoryTechnicianState extends State<HistoryTechnician> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              UserHistoryCard(
-                service_center_image:
-                    "https://www.shutterstock.com/image-vector/circle-line-simple-design-logo-600nw-2174926871.jpg",
-                service_center_name: "Tech Solutions (PVT)LTD",
-                vehicle_no: "WP-CAD-5617",
-                contact_no: "0764598798",
-                service_center_address: "No 517/B, Meegahawatta, Delgoda.",
-                service_date: "2024/08/12",
-                service_time: "7.20 P.M",
+              Center(
+                child: Text(
+                  "Account",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontFamily: "Inria-sans-Regular",
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: w * 0.05,
+              ),
+              Container(
+                width: w * 0.20,
+                height: w * 0.20,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(50.0),
+                  child: Image.network(
+                      fit: BoxFit.cover,
+                      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRKc6EnanoKKj61vCCamKeDwXelxNzUElzIWWDgf75XNEa1-uaHgiSq32hF7bp73Tq9nsY&usqp=CAU"),
+                ),
+              ),
+              SizedBox(
+                height: w * 0.05,
+              ),
+              AccountOptionsCard(
+                option_name: "Edit Vehicle Info",
+                icon: Icon(Icons.arrow_forward_ios_outlined),
+                select_option: () {},
+              ),
+              AccountOptionsCard(
+                option_name: "Change Password",
+                icon: Icon(Icons.arrow_forward_ios_outlined),
+                select_option: () {},
+              ),
+              AccountOptionsCard(
+                option_name: "Sign Out",
+                icon: Icon(Icons.arrow_forward_ios_outlined),
+                select_option: () {},
               ),
             ],
           ),
@@ -136,13 +157,11 @@ class _HistoryTechnicianState extends State<HistoryTechnician> {
               );
               break;
             case 2:
-              break;
-            case 3:
-             Navigator.push(
+              Navigator.push(
                 context,
                 PageRouteBuilder(
                   pageBuilder: (context, animation, secondaryAnimation) =>
-                      UserAccountPage(),
+                      HistoryTechnician(),
                   transitionsBuilder:
                       (context, animation, secondaryAnimation, child) =>
                           FadeTransition(
@@ -151,6 +170,8 @@ class _HistoryTechnicianState extends State<HistoryTechnician> {
                   ),
                 ),
               );
+              break;
+            case 3:
               break;
           }
         },
