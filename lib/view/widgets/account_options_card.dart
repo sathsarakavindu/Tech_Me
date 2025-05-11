@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-class AccountOptionsCard extends StatelessWidget {
+class AccountOptionsCard extends StatefulWidget {
   String option_name;
   Icon icon;
   void Function()? select_option;
@@ -13,11 +13,16 @@ class AccountOptionsCard extends StatelessWidget {
       this.select_option});
 
   @override
+  State<AccountOptionsCard> createState() => _AccountOptionsCardState();
+}
+
+class _AccountOptionsCardState extends State<AccountOptionsCard> {
+  @override
   Widget build(BuildContext context) {
     double w = MediaQuery.of(context).size.width;
     double h = MediaQuery.of(context).size.height;
     return GestureDetector(
-      onTap: () => select_option,
+      onTap: widget.select_option,
       child: Container(
         width: w,
         height: w * 0.14,
@@ -32,7 +37,7 @@ class AccountOptionsCard extends StatelessWidget {
             Container(
               margin: EdgeInsets.only(left: w * 0.04),
               child: Text(
-                option_name,
+                widget.option_name,
                 style: TextStyle(
                   color: Colors.black,
                   fontSize: 15,
@@ -43,7 +48,7 @@ class AccountOptionsCard extends StatelessWidget {
             ),
             Container(
               margin: EdgeInsets.only(right: w * 0.04),
-              child: icon,
+              child: widget.icon,
             ),
           ],
         ),
