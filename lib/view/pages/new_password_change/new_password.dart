@@ -1,36 +1,41 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:tec_me/view/config/app.dart';
-import 'package:tec_me/view/pages/otp/otp_page.dart';
-import 'package:tec_me/view/pages/sign_up/signup.dart';
+import 'package:tec_me/view/pages/login/login.dart';
 
-class ForgotPassword extends StatelessWidget {
-  const ForgotPassword({super.key});
+class NewPasswordPage extends StatefulWidget {
+  const NewPasswordPage({super.key});
 
+  @override
+  State<NewPasswordPage> createState() => _NewPasswordPageState();
+}
+
+class _NewPasswordPageState extends State<NewPasswordPage> {
   @override
   Widget build(BuildContext context) {
     double w = MediaQuery.of(context).size.width;
     double h = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: Color(0xFF000b58),
-      body: SingleChildScrollView(
-        child: Container(
-          height: h,
-          child: Column(
-            children: [
-              SizedBox(
-                height: h * 0.12,
-              ),
-              Center(
-                child: Container(
-                  width: h * 0.115,
-                  height: h * 0.115,
-                  margin: EdgeInsets.only(bottom: h * 0.28),
-                  child: Image.asset(
-                    AppConfig.app_icon,
-                  ),
+      body: Container(
+        height: h,
+        child: Column(
+          children: [
+            SizedBox(
+              height: h * 0.12,
+            ),
+            Center(
+              child: Container(
+                width: h * 0.115,
+                height: h * 0.115,
+                margin: EdgeInsets.only(bottom: h * 0.20),
+                child: Image.asset(
+                  AppConfig.app_icon,
                 ),
               ),
-              Expanded(
+            ),
+            Expanded(
+              child: SingleChildScrollView(
                 child: Container(
                   width: w,
                   height: h * 0.71,
@@ -47,19 +52,24 @@ class ForgotPassword extends StatelessWidget {
                         height: h * 0.03,
                       ),
                       Text(
-                        "Forgot Password",
+                        "Create New Password",
                         style: TextStyle(
                             fontSize: 25, fontFamily: 'Inria-sans-bold'),
                       ),
                       SizedBox(
-                        height: h * 0.035,
+                        height: h * 0.025,
                       ),
                       Row(
                         children: [
                           SizedBox(
                             width: w * 0.10,
                           ),
-                          Text("Enter Your Registered Email"),
+                          Text(
+                            "Enter Your New Password",
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontFamily: 'Inria-sans-bold'),
+                          ),
                         ],
                       ),
                       SizedBox(
@@ -68,19 +78,60 @@ class ForgotPassword extends StatelessWidget {
                       SizedBox(
                         width: w * 0.80,
                         child: TextFormField(
+                          obscureText: true,
                           decoration: InputDecoration(
+                            prefixIcon: Icon(
+                              Icons.lock,
+                              color: Colors.black,
+                            ),
                             hintStyle: TextStyle(
                                 fontFamily: AppConfig.font_regular_family),
                             filled: true,
                             fillColor: const Color(0xFFD1D3DE),
-                            hintText: "EX: index@example.com",
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12.0)),
                           ),
                         ),
                       ),
                       SizedBox(
-                        height: h * 0.035,
+                        height: h * 0.025,
+                      ),
+                      Row(
+                        children: [
+                          SizedBox(
+                            width: w * 0.10,
+                          ),
+                          Text(
+                            "Re-Enter Password",
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontFamily: 'Inria-sans-bold'),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: h * 0.01,
+                      ),
+                      SizedBox(
+                        width: w * 0.80,
+                        child: TextFormField(
+                          obscureText: true,
+                          decoration: InputDecoration(
+                            prefixIcon: Icon(
+                              Icons.verified,
+                              color: Colors.black,
+                            ),
+                            hintStyle: TextStyle(
+                                fontFamily: AppConfig.font_regular_family),
+                            filled: true,
+                            fillColor: const Color(0xFFD1D3DE),
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12.0)),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: h * 0.03,
                       ),
                       Container(
                         width: w * 0.80,
@@ -98,23 +149,22 @@ class ForgotPassword extends StatelessWidget {
                             ),
                           ),
                           onPressed: () {
-                            Navigator.push(
-                              context,
-                              PageRouteBuilder(
-                                pageBuilder:
-                                    (context, animation, secondaryAnimation) =>
-                                        OtpPage(),
-                                transitionsBuilder: (context, animation,
-                                        secondaryAnimation, child) =>
-                                    FadeTransition(
-                                  opacity: animation,
-                                  child: child,
+                            Navigator.of(context).pushAndRemoveUntil(
+                                PageRouteBuilder(
+                                  pageBuilder: (context, animation,
+                                          secondaryAnimation) =>
+                                      Login(),
+                                  transitionsBuilder: (context, animation,
+                                          secondaryAnimation, child) =>
+                                      FadeTransition(
+                                    opacity: animation,
+                                    child: child,
+                                  ),
                                 ),
-                              ),
-                            );
+                                (Route<dynamic> route) => false);
                           },
                           child: Text(
-                            "Continue",
+                            "Change Password",
                             style: TextStyle(
                                 color: Colors.white,
                                 fontFamily: AppConfig.font_bold_family,
@@ -123,7 +173,7 @@ class ForgotPassword extends StatelessWidget {
                         ),
                       ),
                       SizedBox(
-                        height: h * 0.035,
+                        height: h * 0.03,
                       ),
                       Container(
                         width: w * 0.80,
@@ -156,8 +206,8 @@ class ForgotPassword extends StatelessWidget {
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

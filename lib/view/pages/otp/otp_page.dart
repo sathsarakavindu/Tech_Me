@@ -1,11 +1,16 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:tec_me/view/config/app.dart';
-import 'package:tec_me/view/pages/otp/otp_page.dart';
-import 'package:tec_me/view/pages/sign_up/signup.dart';
+import 'package:tec_me/view/pages/new_password_change/new_password.dart';
 
-class ForgotPassword extends StatelessWidget {
-  const ForgotPassword({super.key});
+class OtpPage extends StatefulWidget {
+  const OtpPage({super.key});
 
+  @override
+  State<OtpPage> createState() => _OtpPageState();
+}
+
+class _OtpPageState extends State<OtpPage> {
   @override
   Widget build(BuildContext context) {
     double w = MediaQuery.of(context).size.width;
@@ -47,19 +52,27 @@ class ForgotPassword extends StatelessWidget {
                         height: h * 0.03,
                       ),
                       Text(
-                        "Forgot Password",
+                        "OTP Verification",
                         style: TextStyle(
                             fontSize: 25, fontFamily: 'Inria-sans-bold'),
                       ),
                       SizedBox(
-                        height: h * 0.035,
+                        height: h * 0.010,
                       ),
                       Row(
                         children: [
                           SizedBox(
                             width: w * 0.10,
                           ),
-                          Text("Enter Your Registered Email"),
+                          SizedBox(
+                            width: w * 0.80,
+                            child: Text(
+                              textAlign: TextAlign.center,
+                              "The OTP Code was sent to your registered email",
+                              style: TextStyle(
+                                  fontSize: 15, fontFamily: 'Inria-sans-bold'),
+                            ),
+                          ),
                         ],
                       ),
                       SizedBox(
@@ -73,14 +86,42 @@ class ForgotPassword extends StatelessWidget {
                                 fontFamily: AppConfig.font_regular_family),
                             filled: true,
                             fillColor: const Color(0xFFD1D3DE),
-                            hintText: "EX: index@example.com",
+                            hintText: "EX: 4526",
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12.0)),
                           ),
                         ),
                       ),
                       SizedBox(
-                        height: h * 0.035,
+                        height: h * 0.015,
+                      ),
+                      SizedBox(
+                        width: w * 0.80,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              textAlign: TextAlign.center,
+                              "Don't receive the OTP ?",
+                              style: TextStyle(
+                                  fontSize: 15, fontFamily: 'Inria-sans-bold'),
+                            ),
+                            InkWell(
+                              onTap: () {},
+                              child: Text(
+                                textAlign: TextAlign.center,
+                                "Resend",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15,
+                                    fontFamily: 'Inria-sans-bold'),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: h * 0.03,
                       ),
                       Container(
                         width: w * 0.80,
@@ -103,7 +144,7 @@ class ForgotPassword extends StatelessWidget {
                               PageRouteBuilder(
                                 pageBuilder:
                                     (context, animation, secondaryAnimation) =>
-                                        OtpPage(),
+                                        NewPasswordPage(),
                                 transitionsBuilder: (context, animation,
                                         secondaryAnimation, child) =>
                                     FadeTransition(
@@ -114,7 +155,7 @@ class ForgotPassword extends StatelessWidget {
                             );
                           },
                           child: Text(
-                            "Continue",
+                            "Verify & Proceed",
                             style: TextStyle(
                                 color: Colors.white,
                                 fontFamily: AppConfig.font_bold_family,
@@ -123,7 +164,7 @@ class ForgotPassword extends StatelessWidget {
                         ),
                       ),
                       SizedBox(
-                        height: h * 0.035,
+                        height: h * 0.03,
                       ),
                       Container(
                         width: w * 0.80,
