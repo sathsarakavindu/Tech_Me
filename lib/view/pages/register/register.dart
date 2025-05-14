@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tec_me/view/config/app.dart';
 import 'package:tec_me/view/widgets/register_textFormField.dart';
 import 'package:tec_me/view_model/bloc/register_bloc/bloc/register_bloc_bloc.dart';
-import 'package:tec_me/view_model/bloc/signup_bloc/bloc/signup_bloc.dart';
 
 class Register extends StatefulWidget {
   const Register({super.key});

@@ -1,26 +1,26 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tec_me/view/config/app.dart';
-import 'package:tec_me/view/pages/otp/otp_page.dart';
-import 'package:tec_me/view/pages/sign_up/signup.dart';
-import 'package:tec_me/view_model/bloc/forgot_password_bloc/bloc/forgot_password_bloc.dart';
+import 'package:tec_me/view/pages/create_new_password_change/create_new_password.dart';
+import 'package:tec_me/view_model/bloc/otp_bloc/bloc/otp_bloc.dart';
 
-class ForgotPassword extends StatefulWidget {
-  const ForgotPassword({super.key});
+class OtpPage extends StatefulWidget {
+  const OtpPage({super.key});
 
   @override
-  State<ForgotPassword> createState() => _ForgotPasswordState();
+  State<OtpPage> createState() => _OtpPageState();
 }
 
-class _ForgotPasswordState extends State<ForgotPassword> {
-  final ForgotPasswordBloc forgotPasswordBloc = ForgotPasswordBloc();
+class _OtpPageState extends State<OtpPage> {
+  final OtpBloc otpBloc = OtpBloc();
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    forgotPasswordBloc.add(
-      ForgotPasswordPageInitialEvent(),
+    otpBloc.add(
+      OTPInitialEvent(),
     );
   }
 
@@ -31,12 +31,12 @@ class _ForgotPasswordState extends State<ForgotPassword> {
     return Scaffold(
       backgroundColor: Color(0xFF000b58),
       body: BlocConsumer(
-        listenWhen: (previous, current) => current is ForgotPasswordActionState,
-        buildWhen: (previous, current) => current is! ForgotPasswordActionState,
-        bloc: forgotPasswordBloc,
+        bloc: otpBloc,
+        buildWhen: (previous, current) => current is! OTPActionState,
+        listenWhen: (previous, current) => current is OTPActionState,
         builder: (context, state) {
           switch (state.runtimeType) {
-            case ForgotPasswordInitialState:
+            case OTPInitialState:
               return SingleChildScrollView(
                 child: Container(
                   height: h,
@@ -72,20 +72,29 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                                 height: h * 0.03,
                               ),
                               Text(
-                                "Forgot Password",
+                                "OTP Verification",
                                 style: TextStyle(
                                     fontSize: 25,
                                     fontFamily: 'Inria-sans-bold'),
                               ),
                               SizedBox(
-                                height: h * 0.035,
+                                height: h * 0.010,
                               ),
                               Row(
                                 children: [
                                   SizedBox(
                                     width: w * 0.10,
                                   ),
-                                  Text("Enter Your Registered Email"),
+                                  SizedBox(
+                                    width: w * 0.80,
+                                    child: Text(
+                                      textAlign: TextAlign.center,
+                                      "The OTP Code was sent to your registered email",
+                                      style: TextStyle(
+                                          fontSize: 15,
+                                          fontFamily: 'Inria-sans-bold'),
+                                    ),
+                                  ),
                                 ],
                               ),
                               SizedBox(
@@ -100,7 +109,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                                             AppConfig.font_regular_family),
                                     filled: true,
                                     fillColor: const Color(0xFFD1D3DE),
-                                    hintText: "EX: index@example.com",
+                                    hintText: "EX: 4526",
                                     border: OutlineInputBorder(
                                         borderRadius:
                                             BorderRadius.circular(12.0)),
@@ -108,7 +117,37 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                                 ),
                               ),
                               SizedBox(
-                                height: h * 0.035,
+                                height: h * 0.015,
+                              ),
+                              SizedBox(
+                                width: w * 0.80,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      textAlign: TextAlign.center,
+                                      "Don't receive the OTP ?",
+                                      style: TextStyle(
+                                          fontSize: 15,
+                                          fontFamily: 'Inria-sans-bold'),
+                                    ),
+                                    InkWell(
+                                      onTap: () {},
+                                      child: Text(
+                                        textAlign: TextAlign.center,
+                                        "Resend",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 15,
+                                            fontFamily: 'Inria-sans-bold'),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(
+                                height: h * 0.03,
                               ),
                               Container(
                                 width: w * 0.80,
@@ -132,7 +171,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                                       PageRouteBuilder(
                                         pageBuilder: (context, animation,
                                                 secondaryAnimation) =>
-                                            OtpPage(),
+                                            NewPasswordPage(),
                                         transitionsBuilder: (context, animation,
                                                 secondaryAnimation, child) =>
                                             FadeTransition(
@@ -143,7 +182,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                                     );
                                   },
                                   child: Text(
-                                    "Continue",
+                                    "Verify & Proceed",
                                     style: TextStyle(
                                         color: Colors.white,
                                         fontFamily: AppConfig.font_bold_family,
@@ -152,7 +191,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                                 ),
                               ),
                               SizedBox(
-                                height: h * 0.035,
+                                height: h * 0.03,
                               ),
                               Container(
                                 width: w * 0.80,
@@ -190,16 +229,11 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                   ),
                 ),
               );
-
             default:
               return SizedBox();
           }
         },
-        listener: (context, state) {
-
-
-          
-        },
+        listener: (context, state) {},
       ),
     );
   }
@@ -240,19 +274,27 @@ SingleChildScrollView(
                         height: h * 0.03,
                       ),
                       Text(
-                        "Forgot Password",
+                        "OTP Verification",
                         style: TextStyle(
                             fontSize: 25, fontFamily: 'Inria-sans-bold'),
                       ),
                       SizedBox(
-                        height: h * 0.035,
+                        height: h * 0.010,
                       ),
                       Row(
                         children: [
                           SizedBox(
                             width: w * 0.10,
                           ),
-                          Text("Enter Your Registered Email"),
+                          SizedBox(
+                            width: w * 0.80,
+                            child: Text(
+                              textAlign: TextAlign.center,
+                              "The OTP Code was sent to your registered email",
+                              style: TextStyle(
+                                  fontSize: 15, fontFamily: 'Inria-sans-bold'),
+                            ),
+                          ),
                         ],
                       ),
                       SizedBox(
@@ -266,14 +308,42 @@ SingleChildScrollView(
                                 fontFamily: AppConfig.font_regular_family),
                             filled: true,
                             fillColor: const Color(0xFFD1D3DE),
-                            hintText: "EX: index@example.com",
+                            hintText: "EX: 4526",
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12.0)),
                           ),
                         ),
                       ),
                       SizedBox(
-                        height: h * 0.035,
+                        height: h * 0.015,
+                      ),
+                      SizedBox(
+                        width: w * 0.80,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              textAlign: TextAlign.center,
+                              "Don't receive the OTP ?",
+                              style: TextStyle(
+                                  fontSize: 15, fontFamily: 'Inria-sans-bold'),
+                            ),
+                            InkWell(
+                              onTap: () {},
+                              child: Text(
+                                textAlign: TextAlign.center,
+                                "Resend",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15,
+                                    fontFamily: 'Inria-sans-bold'),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: h * 0.03,
                       ),
                       Container(
                         width: w * 0.80,
@@ -296,7 +366,7 @@ SingleChildScrollView(
                               PageRouteBuilder(
                                 pageBuilder:
                                     (context, animation, secondaryAnimation) =>
-                                        OtpPage(),
+                                        NewPasswordPage(),
                                 transitionsBuilder: (context, animation,
                                         secondaryAnimation, child) =>
                                     FadeTransition(
@@ -307,7 +377,7 @@ SingleChildScrollView(
                             );
                           },
                           child: Text(
-                            "Continue",
+                            "Verify & Proceed",
                             style: TextStyle(
                                 color: Colors.white,
                                 fontFamily: AppConfig.font_bold_family,
@@ -316,7 +386,7 @@ SingleChildScrollView(
                         ),
                       ),
                       SizedBox(
-                        height: h * 0.035,
+                        height: h * 0.03,
                       ),
                       Container(
                         width: w * 0.80,
