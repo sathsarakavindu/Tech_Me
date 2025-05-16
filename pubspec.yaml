@@ -102,6 +102,7 @@ flutter:
     - assets/images/notification/
     - assets/images/add_vehicle/
     - assets/images/log_out/
+    - assets/images/account/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

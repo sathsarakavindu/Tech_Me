@@ -89,11 +89,16 @@ class _LoginState extends State<Login> {
                               child: TextFormField(
                                 controller: email_controller,
                                 decoration: InputDecoration(
+                                  prefixIcon: Icon(
+                                    Icons.person,
+                                    color: Colors.black,
+                                  ),
                                   hintStyle: TextStyle(
+                                      color: Colors.black,
                                       fontFamily:
                                           AppConfig.font_regular_family),
                                   filled: true,
-                                  fillColor: const Color(0xFFD9D9D9),
+                                  fillColor: Colors.white,
                                   hintText: "Enter Email",
                                   border: OutlineInputBorder(
                                       borderRadius:
@@ -107,13 +112,19 @@ class _LoginState extends State<Login> {
                             SizedBox(
                               width: w * 0.90,
                               child: TextFormField(
+                                obscureText: true,
                                 controller: password_controller,
                                 decoration: InputDecoration(
+                                  prefixIcon: Icon(
+                                    Icons.lock,
+                                    color: Colors.black,
+                                  ),
                                   hintStyle: TextStyle(
+                                      color: Colors.black,
                                       fontFamily:
                                           AppConfig.font_regular_family),
                                   filled: true,
-                                  fillColor: const Color(0xFFD9D9D9),
+                                  fillColor: Colors.white,
                                   hintText: "Enter Password",
                                   border: OutlineInputBorder(
                                       borderRadius:
