@@ -9,6 +9,8 @@ import 'package:tec_me/view/pages/dashboard/newDashboard.dart';
 import 'package:tec_me/view/pages/edit_vehicle_page/edit_vehicle_page.dart';
 import 'package:tec_me/view/pages/history/history_technician.dart';
 import 'package:tec_me/view/pages/login/login.dart';
+import 'package:tec_me/view/pages/change_password/change_password.dart';
+import 'package:tec_me/view/pages/user_account_page.dart/user_account.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -41,7 +43,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: Login(),
-      //home: DashboardNew(),
+      // home: ChangePassword(),
     );
   }
 }
