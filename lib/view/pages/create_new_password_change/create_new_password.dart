@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tec_me/view/config/app.dart';
@@ -14,6 +13,9 @@ class NewPasswordPage extends StatefulWidget {
 
 class _NewPasswordPageState extends State<NewPasswordPage> {
   final CreateNewPasswordBloc createNewPasswordBloc = CreateNewPasswordBloc();
+  GlobalKey<FormState> _fromKey = GlobalKey<FormState>();
+  TextEditingController _newPasswordController = TextEditingController();
+  TextEditingController _reEnterPasswordController = TextEditingController();
 
   @override
   void initState() {
@@ -41,202 +43,206 @@ class _NewPasswordPageState extends State<NewPasswordPage> {
               case CreateNewPasswordInitialState:
                 return Container(
                   height: h,
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        height: h * 0.12,
-                      ),
-                      Center(
-                        child: Container(
-                          width: h * 0.115,
-                          height: h * 0.115,
-                          margin: EdgeInsets.only(bottom: h * 0.20),
-                          child: Image.asset(
-                            AppConfig.app_icon,
-                          ),
+                  child: Form(
+                    key: _fromKey,
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: h * 0.12,
                         ),
-                      ),
-                      Expanded(
-                        child: Container(
-                          width: w,
-                          height: h * 0.71,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(40.0),
-                              topRight: Radius.circular(40.0),
+                        Center(
+                          child: Container(
+                            width: h * 0.115,
+                            height: h * 0.115,
+                            margin: EdgeInsets.only(bottom: h * 0.20),
+                            child: Image.asset(
+                              AppConfig.app_icon,
                             ),
                           ),
-                          child: Column(
-                            children: [
-                              SizedBox(
-                                height: h * 0.03,
+                        ),
+                        Expanded(
+                          child: Container(
+                            width: w,
+                            height: h * 0.71,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(40.0),
+                                topRight: Radius.circular(40.0),
                               ),
-                              Text(
-                                "Create New Password",
-                                style: TextStyle(
-                                    fontSize: 25,
-                                    fontFamily: 'Inria-sans-bold'),
-                              ),
-                              SizedBox(
-                                height: h * 0.025,
-                              ),
-                              Row(
-                                children: [
-                                  SizedBox(
-                                    width: w * 0.10,
-                                  ),
-                                  Text(
-                                    "Enter Your New Password",
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontFamily: 'Inria-sans-bold'),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(
-                                height: h * 0.01,
-                              ),
-                              SizedBox(
-                                width: w * 0.80,
-                                child: TextFormField(
-                                  obscureText: true,
-                                  decoration: InputDecoration(
-                                    prefixIcon: Icon(
-                                      Icons.lock,
-                                      color: Colors.black,
-                                    ),
-                                    hintStyle: TextStyle(
-                                        fontFamily:
-                                            AppConfig.font_regular_family),
-                                    filled: true,
-                                    fillColor: const Color(0xFFD1D3DE),
-                                    border: OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(12.0)),
-                                  ),
+                            ),
+                            child: Column(
+                              children: [
+                                SizedBox(
+                                  height: h * 0.03,
                                 ),
-                              ),
-                              SizedBox(
-                                height: h * 0.025,
-                              ),
-                              Row(
-                                children: [
-                                  SizedBox(
-                                    width: w * 0.10,
-                                  ),
-                                  Text(
-                                    "Re-Enter Password",
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontFamily: 'Inria-sans-bold'),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(
-                                height: h * 0.01,
-                              ),
-                              SizedBox(
-                                width: w * 0.80,
-                                child: TextFormField(
-                                  obscureText: true,
-                                  decoration: InputDecoration(
-                                    prefixIcon: Icon(
-                                      Icons.verified,
-                                      color: Colors.black,
-                                    ),
-                                    hintStyle: TextStyle(
-                                        fontFamily:
-                                            AppConfig.font_regular_family),
-                                    filled: true,
-                                    fillColor: const Color(0xFFD1D3DE),
-                                    border: OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(12.0)),
-                                  ),
+                                Text(
+                                  "Create New Password",
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      fontFamily: 'Inria-sans-bold'),
                                 ),
-                              ),
-                              SizedBox(
-                                height: h * 0.03,
-                              ),
-                              Container(
-                                width: w * 0.80,
-                                height: h * 0.07,
-                                child: ElevatedButton(
-                                  style: ButtonStyle(
-                                    shape: WidgetStateProperty.all(
-                                      RoundedRectangleBorder(
-                                        // Change your radius here
+                                SizedBox(
+                                  height: h * 0.025,
+                                ),
+                                Row(
+                                  children: [
+                                    SizedBox(
+                                      width: w * 0.10,
+                                    ),
+                                    Text(
+                                      "Enter Your New Password",
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontFamily: 'Inria-sans-bold'),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: h * 0.01,
+                                ),
+                                SizedBox(
+                                  width: w * 0.80,
+                                  child: TextFormField(
+                                    controller: _newPasswordController,
+                                    obscureText: true,
+                                    decoration: InputDecoration(
+                                      suffixIcon: IconButton(
+                                        onPressed: () {},
+                                        icon: Icon(Icons.visibility_off),
+                                      ),
+                                      prefixIcon: Icon(
+                                        Icons.lock,
+                                        color: Colors.black,
+                                      ),
+                                      hintStyle: TextStyle(
+                                          fontFamily:
+                                              AppConfig.font_regular_family),
+                                      filled: true,
+                                      fillColor: const Color(0xFFD1D3DE),
+                                      border: OutlineInputBorder(
                                         borderRadius:
                                             BorderRadius.circular(12.0),
                                       ),
                                     ),
-                                    backgroundColor: WidgetStatePropertyAll(
-                                      Color(0xFF000b58),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: h * 0.025,
+                                ),
+                                Row(
+                                  children: [
+                                    SizedBox(
+                                      width: w * 0.10,
+                                    ),
+                                    Text(
+                                      "Re-Enter Password",
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontFamily: 'Inria-sans-bold'),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: h * 0.01,
+                                ),
+                                SizedBox(
+                                  width: w * 0.80,
+                                  child: TextFormField(
+                                    controller: _reEnterPasswordController,
+                                    obscureText: true,
+                                    decoration: InputDecoration(
+                                      prefixIcon: Icon(
+                                        Icons.verified,
+                                        color: Colors.black,
+                                      ),
+                                      hintStyle: TextStyle(
+                                          fontFamily:
+                                              AppConfig.font_regular_family),
+                                      filled: true,
+                                      fillColor: const Color(0xFFD1D3DE),
+                                      border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(12.0)),
                                     ),
                                   ),
-                                  onPressed: () {
-                                    Navigator.of(context).pushAndRemoveUntil(
-                                        PageRouteBuilder(
-                                          pageBuilder: (context, animation,
-                                                  secondaryAnimation) =>
-                                              Login(),
-                                          transitionsBuilder: (context,
-                                                  animation,
-                                                  secondaryAnimation,
-                                                  child) =>
-                                              FadeTransition(
-                                            opacity: animation,
-                                            child: child,
-                                          ),
+                                ),
+                                SizedBox(
+                                  height: h * 0.03,
+                                ),
+                                Container(
+                                  width: w * 0.80,
+                                  height: h * 0.07,
+                                  child: ElevatedButton(
+                                    style: ButtonStyle(
+                                      shape: WidgetStateProperty.all(
+                                        RoundedRectangleBorder(
+                                          // Change your radius here
+                                          borderRadius:
+                                              BorderRadius.circular(12.0),
                                         ),
-                                        (Route<dynamic> route) => false);
-                                  },
-                                  child: Text(
-                                    "Change Password",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontFamily: AppConfig.font_bold_family,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                height: h * 0.03,
-                              ),
-                              Container(
-                                width: w * 0.80,
-                                height: h * 0.07,
-                                child: ElevatedButton(
-                                  style: ButtonStyle(
-                                    shape: WidgetStateProperty.all(
-                                      RoundedRectangleBorder(
-                                        // Change your radius here
-                                        borderRadius:
-                                            BorderRadius.circular(12.0),
+                                      ),
+                                      backgroundColor: WidgetStatePropertyAll(
+                                        Color(0xFF000b58),
                                       ),
                                     ),
-                                    backgroundColor: WidgetStatePropertyAll(
-                                      Color(0xFFD1D3DE),
+                                    onPressed: () {
+                                      createNewPasswordBloc.add(
+                                        CreatePasswordButtonClickedEvent(
+                                            new_password:
+                                                _newPasswordController.text),
+                                      );
+                                      print(
+                                          "change password: ${_newPasswordController.text}");
+                                    },
+                                    child: Text(
+                                      "Change Password",
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontFamily:
+                                              AppConfig.font_bold_family,
+                                          fontWeight: FontWeight.bold),
                                     ),
                                   ),
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: Text(
-                                    "Back",
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontFamily: AppConfig.font_bold_family,
-                                        fontWeight: FontWeight.bold),
+                                ),
+                                SizedBox(
+                                  height: h * 0.03,
+                                ),
+                                Container(
+                                  width: w * 0.80,
+                                  height: h * 0.07,
+                                  child: ElevatedButton(
+                                    style: ButtonStyle(
+                                      shape: WidgetStateProperty.all(
+                                        RoundedRectangleBorder(
+                                          // Change your radius here
+                                          borderRadius:
+                                              BorderRadius.circular(12.0),
+                                        ),
+                                      ),
+                                      backgroundColor: WidgetStatePropertyAll(
+                                        Color(0xFFD1D3DE),
+                                      ),
+                                    ),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Text(
+                                      "Back",
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontFamily:
+                                              AppConfig.font_bold_family,
+                                          fontWeight: FontWeight.bold),
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 );
 
@@ -244,7 +250,30 @@ class _NewPasswordPageState extends State<NewPasswordPage> {
                 return SizedBox();
             }
           },
-          listener: (context, state) {},
+          listener: (context, state) {
+            if (state is CreateNewPasswordSuccessState) {
+              Navigator.of(context).pushAndRemoveUntil(
+                  PageRouteBuilder(
+                    pageBuilder: (context, animation, secondaryAnimation) =>
+                        Login(),
+                    transitionsBuilder:
+                        (context, animation, secondaryAnimation, child) =>
+                            FadeTransition(
+                      opacity: animation,
+                      child: child,
+                    ),
+                  ),
+                  (Route<dynamic> route) => false);
+            } else if (state is CreateNewPasswordErrorState) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text("Password can't be changed."),
+                ),
+              );
+            } else if (state is CreateNewPasswordBackState) {
+              Navigator.of(context).pop();
+            }
+          },
         ));
   }
 }
