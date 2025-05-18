@@ -4,6 +4,7 @@ import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_not
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:tec_me/view/config/app.dart';
 import 'package:tec_me/view/pages/add_vehicle_page/add_vehicle.dart';
 import 'package:tec_me/view/pages/history/history_technician.dart';
@@ -20,6 +21,15 @@ class DashboardNew extends StatefulWidget {
 }
 
 class _DashboardNewState extends State<DashboardNew> {
+  late GoogleMapController mapController;
+
+  // Initial location
+  final LatLng _center = const LatLng(7.8731, 80.7718); // Sri Lanka
+
+  void _onMapCreated(GoogleMapController controller) {
+    mapController = controller;
+  }
+
   final PageController _pageController = PageController();
 
   int _currentPage = 0;
@@ -110,14 +120,15 @@ class _DashboardNewState extends State<DashboardNew> {
                           height: w * 0.05,
                         ),
                         Container(
-                          width: w * 0.80,
+                          margin: EdgeInsets.only(left: 10, right: 10),
+                          width: w * 0.98,
                           height: w * 0.50,
                           decoration: BoxDecoration(
                             color: Colors.white,
-                            borderRadius: BorderRadius.circular(20.0),
+                            borderRadius: BorderRadius.circular(10.0),
                           ),
                           child: ClipRRect(
-                            borderRadius: BorderRadius.circular(20.0),
+                            borderRadius: BorderRadius.circular(10.0),
                             child: Stack(
                               children: [
                                 PageView.builder(
@@ -154,7 +165,7 @@ class _DashboardNewState extends State<DashboardNew> {
                                   left: w * 0.15,
                                   child: Container(
                                     width: w * 0.50,
-                                    height: w * 0.10,
+                                    height: w * 0.15,
                                     alignment: Alignment.center,
                                     child: Text(
                                       "Get help for your requirement",
@@ -172,6 +183,31 @@ class _DashboardNewState extends State<DashboardNew> {
                                 ),
                               ],
                             ),
+                          ),
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(
+                            top: 15,
+                            left: 10,
+                            right: 10,
+                          ),
+                          height: w * 0.95,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(10.0),
+                            ),
+                          ),
+                          child: GoogleMap(
+                            onMapCreated: _onMapCreated,
+                            initialCameraPosition: CameraPosition(
+                              target: _center,
+                              zoom: 10.0,
+                            ),
+                            mapType: MapType.normal,
+                            myLocationEnabled: true,
+                            myLocationButtonEnabled: true,
+                            zoomControlsEnabled: true,
                           ),
                         ),
                       ],
@@ -271,7 +307,7 @@ class _DashboardNewState extends State<DashboardNew> {
               );
               break;
             case 3:
-            Navigator.push(
+              Navigator.push(
                 context,
                 PageRouteBuilder(
                   pageBuilder: (context, animation, secondaryAnimation) =>
@@ -293,56 +329,3 @@ class _DashboardNewState extends State<DashboardNew> {
     );
   }
 }
-
-// Container(
-                //   width: w * 0.80,
-                //   height: w * 0.50,
-                //   decoration: BoxDecoration(
-                //     color: Colors.white,
-                //     borderRadius: BorderRadius.circular(20.0),
-                //   ),
-                //   child: Stack(
-                //     children: [
-                //       Container(
-                //         width: w * 0.80,
-                //         height: w * 0.50,
-                //         decoration: BoxDecoration(
-                //           color: Colors.white,
-                //           borderRadius: BorderRadius.circular(20.0),
-                //         ),
-                //         child: Padding(
-                //           padding: const EdgeInsets.all(2.0),
-                //           child: ClipRRect(
-                //             borderRadius: BorderRadius.circular(20.0),
-                //             child: Image.asset(
-                //               "assets/images/dashboard/repair_image.png",
-                //               fit: BoxFit.cover,
-                //             ),
-                //           ),
-                //         ),
-                //       ),
-                //       Positioned(
-                //         top: w * 0.20,
-                //         left: w * 0.15,
-                //         child: Center(
-                //           child: Container(
-                //             // color: Colors.green,
-                //             width: w * 0.50,
-                //             height: w * 0.10,
-                //             child: Text(
-                //               maxLines: 2,
-                //               overflow: TextOverflow.ellipsis,
-                //               textAlign: TextAlign.center,
-                //               "Get help for your requirement",
-                //               style: TextStyle(
-                //                   color: Colors.white,
-                //                   fontFamily: AppConfig.font_bold_family,
-                //                   fontWeight: FontWeight.bold,
-                //                   fontSize: 15),
-                //             ),
-                //           ),
-                //         ),
-                //       ),
-                //     ],
-                //   ),
-                // ),

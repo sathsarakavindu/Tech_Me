@@ -153,26 +153,10 @@ class _LoginState extends State<Login> {
                                 onPressed: () async {
                                   loginInitialBloc.add(
                                     LoginButtonClickEvent(
-                                        email: email_controller.text,
-                                        password: password_controller.text),
+                                      email: email_controller.text.trim(),
+                                      password: password_controller.text.trim(),
+                                    ),
                                   );
-                                  // await userAuth.signinUser(
-                                  //     email_controller.text.trim(),
-                                  //     password_controller.text.trim());
-                                  // Navigator.push(
-                                  //   context,
-                                  //   PageRouteBuilder(
-                                  //     pageBuilder:
-                                  //         (context, animation, secondaryAnimation) =>
-                                  //             DashboardPage(),
-                                  //     transitionsBuilder: (context, animation,
-                                  //             secondaryAnimation, child) =>
-                                  //         FadeTransition(
-                                  //       opacity: animation,
-                                  //       child: child,
-                                  //     ),
-                                  //   ),
-                                  // );
                                 },
                                 child: Text(
                                   "Sign In",
