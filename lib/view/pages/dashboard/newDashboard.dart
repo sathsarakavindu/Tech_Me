@@ -4,6 +4,7 @@ import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_not
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:tec_me/view/config/app.dart';
 import 'package:tec_me/view/pages/add_vehicle_page/add_vehicle.dart';
@@ -21,15 +22,6 @@ class DashboardNew extends StatefulWidget {
 }
 
 class _DashboardNewState extends State<DashboardNew> {
-  late GoogleMapController mapController;
-
-  // Initial location
-  final LatLng _center = const LatLng(7.8731, 80.7718); // Sri Lanka
-
-  void _onMapCreated(GoogleMapController controller) {
-    mapController = controller;
-  }
-
   final PageController _pageController = PageController();
 
   int _currentPage = 0;
@@ -47,9 +39,48 @@ class _DashboardNewState extends State<DashboardNew> {
 
   final preference = PersistenceHelper();
 
+  GoogleMapController? mapController;
+  LatLng? _currentPosition;
+  final Set<Marker> _markers = {};
+
+  Future<void> _getCurrentLocation() async {
+    LocationPermission permission;
+
+    // Request permission
+    permission = await Geolocator.requestPermission();
+    if (permission == LocationPermission.denied) {
+      return;
+    }
+
+    // Get current position
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+
+    LatLng pos = LatLng(position.latitude, position.longitude);
+
+    setState(() {
+      _currentPosition = pos;
+      _markers.add(
+        Marker(
+          markerId: MarkerId("currentLocation"),
+          position: pos,
+          infoWindow: InfoWindow(title: "You are here"),
+        ),
+      );
+    });
+
+    // Move the camera
+    mapController?.animateCamera(
+      CameraUpdate.newCameraPosition(
+        CameraPosition(target: pos, zoom: 15),
+      ),
+    );
+  }
+
   @override
   void initState() {
     super.initState();
+    _getCurrentLocation();
     loadUsername();
     dashboardBlocBloc.add(
       DashboardInitialEvent(),
@@ -76,9 +107,9 @@ class _DashboardNewState extends State<DashboardNew> {
   }
 
   void loadUsername() async {
-    username = await preference.getName(); // Wait for the Future to complete
+    username = await preference.getName();
     print("Username from SharedPreferences: $username");
-    setState(() {}); // Refresh the UI if you're displaying username on screen
+    
   }
 
   @override
@@ -186,6 +217,7 @@ class _DashboardNewState extends State<DashboardNew> {
                           ),
                         ),
                         Container(
+                          padding: EdgeInsets.all(2),
                           margin: EdgeInsets.only(
                             top: 15,
                             left: 10,
@@ -198,17 +230,23 @@ class _DashboardNewState extends State<DashboardNew> {
                               Radius.circular(10.0),
                             ),
                           ),
-                          child: GoogleMap(
-                            onMapCreated: _onMapCreated,
-                            initialCameraPosition: CameraPosition(
-                              target: _center,
-                              zoom: 10.0,
-                            ),
-                            mapType: MapType.normal,
-                            myLocationEnabled: true,
-                            myLocationButtonEnabled: true,
-                            zoomControlsEnabled: true,
-                          ),
+                          child: _currentPosition == null
+                              ? Center(child: CircularProgressIndicator())
+                              : GoogleMap(
+                                  onMapCreated:
+                                      (GoogleMapController controller) {
+                                    mapController = controller;
+                                  },
+                                  initialCameraPosition: CameraPosition(
+                                    target: _currentPosition!,
+                                    zoom: 15.0,
+                                  ),
+                                  scrollGesturesEnabled: true,
+                                  myLocationEnabled: true,
+                                  myLocationButtonEnabled: true,
+                                  markers: _markers,
+                                  zoomControlsEnabled: true,
+                                ),
                         ),
                       ],
                     ),
