@@ -13,7 +13,7 @@ import 'package:tec_me/view/pages/login/login.dart';
 import 'package:tec_me/view/pages/change_password/change_password.dart';
 import 'package:tec_me/view/pages/user_account_page.dart/user_account.dart';
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Supabase.initialize(
     url: 'https://xpprxhnhgxeiqaepmroo.supabase.co',
@@ -43,7 +43,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: DashboardNew(),
+      home: Login(),
       // home: NewPasswordPage(),
     );
   }
