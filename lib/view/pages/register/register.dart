@@ -126,6 +126,7 @@ class _RegisterState extends State<Register> {
                           height: h * 0.035,
                         ),
                         RegisterTextformfield(
+                          height_TextForm: w * 0.18,
                           suffix_icon_button: IconButton(
                             onPressed: () {
                               setState(() {
@@ -133,7 +134,9 @@ class _RegisterState extends State<Register> {
                               });
                             },
                             icon: is_password_hide == true
-                                ? Icon(Icons.visibility_off)
+                                ? Icon(
+                                    Icons.visibility_off,
+                                  )
                                 : Icon(Icons.visibility),
                           ),
                           editingController: password_controller,
@@ -164,6 +167,10 @@ class _RegisterState extends State<Register> {
                           validator: (p0) {
                             if (p0 == null || p0.isEmpty) {
                               return 'Confirm Password is required';
+                            }
+                            if (password_controller.text !=
+                                confirm_password_controller.text) {
+                              return "Password not match";
                             }
                             return null;
                           },

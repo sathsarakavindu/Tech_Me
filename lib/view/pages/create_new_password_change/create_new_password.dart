@@ -16,7 +16,7 @@ class _NewPasswordPageState extends State<NewPasswordPage> {
   GlobalKey<FormState> _fromKey = GlobalKey<FormState>();
   TextEditingController _newPasswordController = TextEditingController();
   TextEditingController _reEnterPasswordController = TextEditingController();
-
+  bool is_hide_password = true;
   @override
   void initState() {
     // TODO: implement initState
@@ -53,8 +53,8 @@ class _NewPasswordPageState extends State<NewPasswordPage> {
                         Center(
                           child: Container(
                             width: h * 0.115,
-                            height: h * 0.115,
-                            margin: EdgeInsets.only(bottom: h * 0.20),
+                            height: h * 0.11,
+                            margin: EdgeInsets.only(bottom: h * 0.15),
                             child: Image.asset(
                               AppConfig.app_icon,
                             ),
@@ -105,11 +105,18 @@ class _NewPasswordPageState extends State<NewPasswordPage> {
                                   width: w * 0.80,
                                   child: TextFormField(
                                     controller: _newPasswordController,
-                                    obscureText: true,
+                                    obscureText: is_hide_password,
                                     decoration: InputDecoration(
                                       suffixIcon: IconButton(
-                                        onPressed: () {},
-                                        icon: Icon(Icons.visibility_off),
+                                        onPressed: () {
+                                          setState(() {
+                                            is_hide_password =
+                                                !is_hide_password;
+                                          });
+                                        },
+                                        icon: is_hide_password == true
+                                            ? Icon(Icons.visibility_off)
+                                            : Icon(Icons.visibility),
                                       ),
                                       prefixIcon: Icon(
                                         Icons.lock,
@@ -125,6 +132,12 @@ class _NewPasswordPageState extends State<NewPasswordPage> {
                                             BorderRadius.circular(12.0),
                                       ),
                                     ),
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return "Password field is empty";
+                                      }
+                                      null;
+                                    },
                                   ),
                                 ),
                                 SizedBox(
@@ -165,6 +178,16 @@ class _NewPasswordPageState extends State<NewPasswordPage> {
                                           borderRadius:
                                               BorderRadius.circular(12.0)),
                                     ),
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return "Re-enter password is empty.";
+                                      }
+                                      if (_newPasswordController.text !=
+                                          _reEnterPasswordController.text) {
+                                        return "Password do not match";
+                                      }
+                                      null;
+                                    },
                                   ),
                                 ),
                                 SizedBox(
@@ -187,13 +210,15 @@ class _NewPasswordPageState extends State<NewPasswordPage> {
                                       ),
                                     ),
                                     onPressed: () {
-                                      createNewPasswordBloc.add(
-                                        CreatePasswordButtonClickedEvent(
-                                            new_password:
-                                                _newPasswordController.text),
-                                      );
-                                      print(
-                                          "change password: ${_newPasswordController.text}");
+                                      if (_fromKey.currentState!.validate()) {
+                                        createNewPasswordBloc.add(
+                                          CreatePasswordButtonClickedEvent(
+                                              new_password:
+                                                  _newPasswordController.text),
+                                        );
+                                        print(
+                                            "change password: ${_newPasswordController.text}");
+                                      }
                                     },
                                     child: Text(
                                       "Change Password",

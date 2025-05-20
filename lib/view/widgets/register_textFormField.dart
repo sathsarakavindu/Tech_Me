@@ -4,6 +4,7 @@ import 'package:tec_me/view/config/app.dart';
 
 class RegisterTextformfield extends StatefulWidget {
   Icon prefix_icon;
+  double? height_TextForm;
   TextEditingController editingController;
   String hint_text;
   bool isPassword;
@@ -12,6 +13,7 @@ class RegisterTextformfield extends StatefulWidget {
 
   RegisterTextformfield(
       {super.key,
+      this.height_TextForm,
       required this.editingController,
       required this.hint_text,
       required this.prefix_icon,
@@ -29,7 +31,8 @@ class _RegisterTextformfieldState extends State<RegisterTextformfield> {
     double w = MediaQuery.of(context).size.width;
     double h = MediaQuery.of(context).size.height;
     return SizedBox(
-        height: w * 0.15,
+      height: widget.height_TextForm,
+        // height: w * 0.20,
         width: w * 0.90,
         child: TextFormField(
           obscureText: widget.isPassword,
