@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:tec_me/view/config/app.dart';
 import 'package:tec_me/view/pages/add_vehicle_page/add_vehicle.dart';
 import 'package:tec_me/view/pages/history/history_technician.dart';
@@ -42,6 +43,34 @@ class _DashboardNewState extends State<DashboardNew> {
   GoogleMapController? mapController;
   LatLng? _currentPosition;
   final Set<Marker> _markers = {};
+
+  Widget hotelShimmer() {
+    double w = MediaQuery.of(context).size.width;
+    return ListView.builder(
+      itemCount: 1, // number of shimmer items
+      itemBuilder: (context, index) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+          child: Shimmer.fromColors(
+              baseColor: Colors.grey.shade300,
+              highlightColor: Colors.grey.shade100,
+              child: Container(
+                height: w * 0.9,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Image.asset(
+                  'assets/giffs/map_loading.gif',
+                  fit: BoxFit.cover,
+                  width: double.infinity,
+                  height: w * 0.9,
+                ),
+              )),
+        );
+      },
+    );
+  }
 
   Future<void> _getCurrentLocation() async {
     LocationPermission permission;
@@ -109,7 +138,6 @@ class _DashboardNewState extends State<DashboardNew> {
   void loadUsername() async {
     username = await preference.getName();
     print("Username from SharedPreferences: $username");
-    
   }
 
   @override
@@ -223,30 +251,42 @@ class _DashboardNewState extends State<DashboardNew> {
                             left: 10,
                             right: 10,
                           ),
-                          height: w * 0.95,
+                          height: w * 0.9,
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.all(
                               Radius.circular(10.0),
                             ),
                           ),
-                          child: _currentPosition == null
-                              ? Center(child: CircularProgressIndicator())
-                              : GoogleMap(
-                                  onMapCreated:
-                                      (GoogleMapController controller) {
-                                    mapController = controller;
-                                  },
-                                  initialCameraPosition: CameraPosition(
-                                    target: _currentPosition!,
-                                    zoom: 15.0,
+                          child: Container(
+                            child: _currentPosition == null
+                                ? Center(
+                                    child: Image.asset(
+                                      'assets/giffs/map_loading.gif',
+                                      fit: BoxFit.cover,
+                                      //height: w * 0.15,
+                                      width: w * 0.5,
+                                    ),
+                                  )
+                                : ClipRRect(
+                                    borderRadius: BorderRadius.circular(10),
+                                    child: GoogleMap(
+                                      onMapCreated:
+                                          (GoogleMapController controller) {
+                                        mapController = controller;
+                                      },
+                                      initialCameraPosition: CameraPosition(
+                                        target: _currentPosition!,
+                                        zoom: 15.0,
+                                      ),
+                                      scrollGesturesEnabled: true,
+                                      myLocationEnabled: true,
+                                      myLocationButtonEnabled: true,
+                                      markers: _markers,
+                                      zoomControlsEnabled: true,
+                                    ),
                                   ),
-                                  scrollGesturesEnabled: true,
-                                  myLocationEnabled: true,
-                                  myLocationButtonEnabled: true,
-                                  markers: _markers,
-                                  zoomControlsEnabled: true,
-                                ),
+                          ),
                         ),
                       ],
                     ),

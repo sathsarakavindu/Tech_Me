@@ -21,7 +21,7 @@ class _LoginState extends State<Login> {
   TextEditingController password_controller = TextEditingController();
   UserAuth userAuth = UserAuth();
   final LoginBloc loginInitialBloc = LoginBloc();
-
+  bool is_password_hide = true;
   @override
   void initState() {
     super.initState();
@@ -112,9 +112,19 @@ class _LoginState extends State<Login> {
                             SizedBox(
                               width: w * 0.90,
                               child: TextFormField(
-                                obscureText: true,
+                                obscureText: is_password_hide,
                                 controller: password_controller,
                                 decoration: InputDecoration(
+                                  suffixIcon: IconButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        is_password_hide = !is_password_hide;
+                                      });
+                                    },
+                                    icon: is_password_hide == true
+                                        ? Icon(Icons.visibility_off)
+                                        : Icon(Icons.visibility),
+                                  ),
                                   prefixIcon: Icon(
                                     Icons.lock,
                                     color: Colors.black,
