@@ -224,21 +224,21 @@ class _ChangePasswordState extends State<ChangePassword> {
                                     ),
                                   ),
                                   onPressed: () {
-                                    Navigator.of(context).pushAndRemoveUntil(
-                                        PageRouteBuilder(
-                                          pageBuilder: (context, animation,
-                                                  secondaryAnimation) =>
-                                              Login(),
-                                          transitionsBuilder: (context,
-                                                  animation,
-                                                  secondaryAnimation,
-                                                  child) =>
-                                              FadeTransition(
-                                            opacity: animation,
-                                            child: child,
-                                          ),
-                                        ),
-                                        (Route<dynamic> route) => false);
+                                    // Navigator.of(context).pushAndRemoveUntil(
+                                    //     PageRouteBuilder(
+                                    //       pageBuilder: (context, animation,
+                                    //               secondaryAnimation) =>
+                                    //           Login(),
+                                    //       transitionsBuilder: (context,
+                                    //               animation,
+                                    //               secondaryAnimation,
+                                    //               child) =>
+                                    //           FadeTransition(
+                                    //         opacity: animation,
+                                    //         child: child,
+                                    //       ),
+                                    //     ),
+                                    //     (Route<dynamic> route) => false);
                                   },
                                   child: Text(
                                     "Change Password",

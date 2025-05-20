@@ -36,6 +36,7 @@ class TextFormAdd extends StatelessWidget {
           Container(
             margin: EdgeInsets.only(left: 8, right: 8),
             child: TextFormField(
+              style: TextStyle(color: Colors.white),
               controller: controller,
               textAlign: TextAlign.center,
               decoration: InputDecoration(

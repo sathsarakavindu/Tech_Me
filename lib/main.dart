@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:tec_me/test_page.dart';
 import 'package:tec_me/view/pages/add_vehicle_page/add_vehicle.dart';
+import 'package:tec_me/view/pages/create_new_password_change/create_new_password.dart';
 import 'package:tec_me/view/pages/dashboard/dashboard.dart';
 import 'package:tec_me/view/pages/dashboard/newDashboard.dart';
 import 'package:tec_me/view/pages/edit_vehicle_page/edit_vehicle_page.dart';
@@ -12,7 +13,7 @@ import 'package:tec_me/view/pages/login/login.dart';
 import 'package:tec_me/view/pages/change_password/change_password.dart';
 import 'package:tec_me/view/pages/user_account_page.dart/user_account.dart';
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Supabase.initialize(
     url: 'https://xpprxhnhgxeiqaepmroo.supabase.co',
@@ -43,7 +44,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: Login(),
-      // home: ChangePassword(),
+      // home: NewPasswordPage(),
     );
   }
 }

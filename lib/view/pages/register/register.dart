@@ -21,6 +21,7 @@ class _RegisterState extends State<Register> {
   TextEditingController nic_controller = TextEditingController();
   TextEditingController address_controller = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  bool is_password_hide = true;
   String? selectedValue;
   final List<String> items = ['User', 'Technician'];
 
@@ -125,13 +126,26 @@ class _RegisterState extends State<Register> {
                           height: h * 0.035,
                         ),
                         RegisterTextformfield(
+                          height_TextForm: w * 0.18,
+                          suffix_icon_button: IconButton(
+                            onPressed: () {
+                              setState(() {
+                                is_password_hide = !is_password_hide;
+                              });
+                            },
+                            icon: is_password_hide == true
+                                ? Icon(
+                                    Icons.visibility_off,
+                                  )
+                                : Icon(Icons.visibility),
+                          ),
                           editingController: password_controller,
                           hint_text: "Enter Password",
                           prefix_icon: Icon(
                             Icons.password,
                             color: Colors.black,
                           ),
-                          isPassword: true,
+                          isPassword: is_password_hide,
                           validator: (p0) {
                             if (p0 == null || p0.isEmpty) {
                               return 'Password is required';
@@ -153,6 +167,10 @@ class _RegisterState extends State<Register> {
                           validator: (p0) {
                             if (p0 == null || p0.isEmpty) {
                               return 'Confirm Password is required';
+                            }
+                            if (password_controller.text !=
+                                confirm_password_controller.text) {
+                              return "Password not match";
                             }
                             return null;
                           },

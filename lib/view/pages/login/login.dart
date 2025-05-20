@@ -21,7 +21,7 @@ class _LoginState extends State<Login> {
   TextEditingController password_controller = TextEditingController();
   UserAuth userAuth = UserAuth();
   final LoginBloc loginInitialBloc = LoginBloc();
-
+  bool is_password_hide = true;
   @override
   void initState() {
     super.initState();
@@ -112,9 +112,19 @@ class _LoginState extends State<Login> {
                             SizedBox(
                               width: w * 0.90,
                               child: TextFormField(
-                                obscureText: true,
+                                obscureText: is_password_hide,
                                 controller: password_controller,
                                 decoration: InputDecoration(
+                                  suffixIcon: IconButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        is_password_hide = !is_password_hide;
+                                      });
+                                    },
+                                    icon: is_password_hide == true
+                                        ? Icon(Icons.visibility_off)
+                                        : Icon(Icons.visibility),
+                                  ),
                                   prefixIcon: Icon(
                                     Icons.lock,
                                     color: Colors.black,
@@ -153,26 +163,10 @@ class _LoginState extends State<Login> {
                                 onPressed: () async {
                                   loginInitialBloc.add(
                                     LoginButtonClickEvent(
-                                        email: email_controller.text,
-                                        password: password_controller.text),
+                                      email: email_controller.text.trim(),
+                                      password: password_controller.text.trim(),
+                                    ),
                                   );
-                                  // await userAuth.signinUser(
-                                  //     email_controller.text.trim(),
-                                  //     password_controller.text.trim());
-                                  // Navigator.push(
-                                  //   context,
-                                  //   PageRouteBuilder(
-                                  //     pageBuilder:
-                                  //         (context, animation, secondaryAnimation) =>
-                                  //             DashboardPage(),
-                                  //     transitionsBuilder: (context, animation,
-                                  //             secondaryAnimation, child) =>
-                                  //         FadeTransition(
-                                  //       opacity: animation,
-                                  //       child: child,
-                                  //     ),
-                                  //   ),
-                                  // );
                                 },
                                 child: Text(
                                   "Sign In",

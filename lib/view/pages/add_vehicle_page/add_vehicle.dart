@@ -13,6 +13,7 @@ import 'package:tec_me/view/pages/history/history_technician.dart';
 import 'package:tec_me/view/pages/user_account_page.dart/user_account.dart';
 import 'package:tec_me/view/widgets/text_form_field.dart';
 import 'package:tec_me/view_model/bloc/addVehicleBloc/bloc/add_vehicle_bloc.dart';
+import 'package:tec_me/view_model/persistence/sharedPreferences.dart';
 
 class AddVehicle extends StatefulWidget {
   const AddVehicle({super.key});
@@ -30,6 +31,7 @@ class _AddVehicleState extends State<AddVehicle> {
       NotchBottomBarController(index: 1);
   final AddVehicleBloc addVehicleBloc = AddVehicleBloc();
   String publicURL = '';
+  PersistenceHelper persistenceHelper = PersistenceHelper();
 
   File? _imageFile;
   String? selectedValue; // currently selected value
@@ -62,27 +64,27 @@ class _AddVehicleState extends State<AddVehicle> {
     try {
       if (_imageFile == null) return;
 
-      if (_imageFile != null) {
-        print("Image file isn't null");
-        print(_imageFile);
-      }
+      print("Image file isn't null");
+      print(_imageFile);
 
       final supabase = Supabase.instance.client;
       final fileName = basename(_imageFile!.path); // e.g., image.jpg
-
       final fileBytes = await _imageFile!.readAsBytes();
 
+      // Upload to the correct folder in the bucket
+      final filePath = 'vehicle images/$fileName';
+
       final response = await supabase.storage
-          .from('images') // your bucket name
+          .from('images') // bucket name
           .uploadBinary(
-            'vehicle images/$fileName', // path inside the bucket
+            filePath, // correct path in bucket
             fileBytes,
             fileOptions: const FileOptions(cacheControl: '3600', upsert: false),
           );
 
       if (response.isNotEmpty) {
-        publicURL =
-            supabase.storage.from('images').getPublicUrl('uploads/$fileName');
+        // ✅ Use the exact same path used in upload
+        publicURL = supabase.storage.from('images').getPublicUrl(filePath);
         print("✅ Uploaded Successfully: $publicURL");
       } else {
         print("❌ Upload failed");
@@ -238,10 +240,12 @@ class _AddVehicleState extends State<AddVehicle> {
                                           padding: const EdgeInsets.symmetric(
                                               vertical:
                                                   12.0), // ⬆️ Increases item height
-                                          child: Text(item,
-                                              style: TextStyle(
-                                                  fontSize: 16,
-                                                  color: Colors.white),),
+                                          child: Text(
+                                            item,
+                                            style: TextStyle(
+                                                fontSize: 16,
+                                                color: Colors.white),
+                                          ),
                                         ),
                                       );
                                     }).toList(),
@@ -283,11 +287,16 @@ class _AddVehicleState extends State<AddVehicle> {
                                 await uploadToSupabase();
                                 addVehicleBloc.add(
                                   AddVehicleButtonClickedEvent(
+                                    contact_no:
+                                        await persistenceHelper.getContactNo(),
+                                    email: await persistenceHelper.getEmail(),
+                                    name: await persistenceHelper.getName(),
+                                    nic: await persistenceHelper.getNIC(),
                                     image_url: publicURL,
                                     vehicle_no:
                                         vehicle_no_controller.text.trim(),
                                     model: model_controller.text.trim(),
-                                    type: type_controller.text.trim(),
+                                    type: selectedValue!,
                                     color: color_controller.text.trim(),
                                   ),
                                 );
@@ -424,7 +433,7 @@ class _AddVehicleState extends State<AddVehicle> {
               );
               break;
             case 3:
-             Navigator.push(
+              Navigator.push(
                 context,
                 PageRouteBuilder(
                   pageBuilder: (context, animation, secondaryAnimation) =>
