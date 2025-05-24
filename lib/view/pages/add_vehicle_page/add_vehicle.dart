@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_notch_bottom_bar.dart';
 import 'package:flutter/foundation.dart';
@@ -60,6 +61,20 @@ class _AddVehicleState extends State<AddVehicle> {
     }
   }
 
+  String generateRandomNumber() {
+    final random = Random();
+
+    // Choose whether to generate 2-digit or 3-digit number
+    int length = random.nextBool() ? 2 : 3;
+
+    int min = length == 2 ? 10 : 100;
+    int max = length == 2 ? 99 : 999;
+
+    int number = min + random.nextInt(max - min + 1);
+
+    return number.toString();
+  }
+
   Future<void> uploadToSupabase() async {
     try {
       if (_imageFile == null) return;
@@ -72,7 +87,7 @@ class _AddVehicleState extends State<AddVehicle> {
       final fileBytes = await _imageFile!.readAsBytes();
 
       // Upload to the correct folder in the bucket
-      final filePath = 'vehicle images/$fileName';
+      final filePath = 'vehicle images/$fileName' + generateRandomNumber();
 
       final response = await supabase.storage
           .from('images') // bucket name

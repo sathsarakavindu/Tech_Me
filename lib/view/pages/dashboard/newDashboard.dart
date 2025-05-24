@@ -7,12 +7,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:tec_me/model/get_vehicles.dart';
 import 'package:tec_me/view/config/app.dart';
 import 'package:tec_me/view/pages/add_vehicle_page/add_vehicle.dart';
 import 'package:tec_me/view/pages/history/history_technician.dart';
 import 'package:tec_me/view/pages/user_account_page.dart/user_account.dart';
 import 'package:tec_me/view/widgets/vehicle_card.dart';
 import 'package:tec_me/view_model/bloc/dashboardBloc/bloc/dashboard_bloc_bloc.dart';
+import 'package:tec_me/view_model/helperClass/vehicleApi.dart';
 import 'package:tec_me/view_model/persistence/sharedPreferences.dart';
 
 class DashboardNew extends StatefulWidget {
@@ -24,9 +26,11 @@ class DashboardNew extends StatefulWidget {
 
 class _DashboardNewState extends State<DashboardNew> {
   final PageController _pageController = PageController();
-
+  PersistenceHelper persistenceHelper = PersistenceHelper();
   int _currentPage = 0;
   String? username;
+  bool getHelp = false;
+  VehicleAPI vehicleAPI = VehicleAPI();
 
   final DashboardBlocBloc dashboardBlocBloc = DashboardBlocBloc();
   final NotchBottomBarController _controller =
@@ -43,6 +47,40 @@ class _DashboardNewState extends State<DashboardNew> {
   GoogleMapController? mapController;
   LatLng? _currentPosition;
   final Set<Marker> _markers = {};
+
+  void _showPopup(BuildContext context, List<GetVehicles> vehicleList) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Select Your Vehicle'),
+        content: SizedBox(
+          width: double.maxFinite,
+          height: 300, // Adjust as needed
+          child: ListView.builder(
+            itemCount: vehicleList.length,
+            itemBuilder: (context, index) {
+              return Card(
+                margin: const EdgeInsets.symmetric(vertical: 8),
+                child: ListTile(
+                  leading: Image.network(
+                    vehicleList[index].image_url,
+                    width: 50,
+                    height: 50,
+                    fit: BoxFit.cover,
+                  ),
+                  title: Text(vehicleList[index].vehicle_no),
+                  onTap: () {
+                    // You can handle tile tap here
+                    Navigator.pop(context); // Close the dialog
+                  },
+                ),
+              );
+            },
+          ),
+        ),
+      ),
+    );
+  }
 
   Widget hotelShimmer() {
     double w = MediaQuery.of(context).size.width;
@@ -149,6 +187,8 @@ class _DashboardNewState extends State<DashboardNew> {
       body: SafeArea(
         child: SingleChildScrollView(
           child: BlocConsumer(
+            listenWhen: (previous, current) => current is DashboardActionState,
+            buildWhen: (previous, current) => current is! DashboardActionState,
             bloc: dashboardBlocBloc,
             builder: (context, state) {
               switch (state.runtimeType) {
@@ -221,7 +261,7 @@ class _DashboardNewState extends State<DashboardNew> {
                                 ),
                                 Positioned(
                                   top: w * 0.20,
-                                  left: w * 0.15,
+                                  left: w * 0.22,
                                   child: Container(
                                     width: w * 0.50,
                                     height: w * 0.15,
@@ -244,50 +284,119 @@ class _DashboardNewState extends State<DashboardNew> {
                             ),
                           ),
                         ),
-                        Container(
-                          padding: EdgeInsets.all(2),
-                          margin: EdgeInsets.only(
-                            top: 15,
-                            left: 10,
-                            right: 10,
-                          ),
-                          height: w * 0.9,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(10.0),
-                            ),
-                          ),
-                          child: Container(
-                            child: _currentPosition == null
-                                ? Center(
-                                    child: Image.asset(
-                                      'assets/giffs/map_loading.gif',
-                                      fit: BoxFit.cover,
-                                      //height: w * 0.15,
-                                      width: w * 0.5,
-                                    ),
-                                  )
-                                : ClipRRect(
-                                    borderRadius: BorderRadius.circular(10),
-                                    child: GoogleMap(
-                                      onMapCreated:
-                                          (GoogleMapController controller) {
-                                        mapController = controller;
-                                      },
-                                      initialCameraPosition: CameraPosition(
-                                        target: _currentPosition!,
-                                        zoom: 15.0,
-                                      ),
-                                      scrollGesturesEnabled: true,
-                                      myLocationEnabled: true,
-                                      myLocationButtonEnabled: true,
-                                      markers: _markers,
-                                      zoomControlsEnabled: true,
-                                    ),
+                        getHelp == false
+                            ? Container(
+                                //padding: EdgeInsets.all(2),
+                                margin: EdgeInsets.only(
+                                  top: 15,
+                                  left: 10,
+                                  right: 10,
+                                ),
+                                height: w * 0.9,
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: Colors.white,
+                                    width: 1,
                                   ),
-                          ),
-                        ),
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(10.0),
+                                  ),
+                                ),
+                                child: Stack(
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(10),
+                                      child: Container(
+                                        height: w * 0.9,
+                                        child: Image.network(
+                                            fit: BoxFit.fill,
+                                            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTq3ukBXDz33mhp_itZa9ETKgy1XlAxIbVPw&s"),
+                                      ),
+                                    ),
+                                    Positioned(
+                                      top: w * 0.40,
+                                      left: w * 0.32,
+                                      child: ElevatedButton(
+                                        child: Text(
+                                          "Get Help",
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontFamily:
+                                                AppConfig.font_bold_family,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 20,
+                                          ),
+                                        ),
+                                        onPressed: () async {
+                                          // _showPopup(context);
+
+                                          dashboardBlocBloc.add(
+                                            GetHelpButtonClickedEvent(),
+                                          );
+
+                                          // setState(() {
+                                          //   getHelp = true;
+                                          // });
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.white,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            : Container(
+                                padding: EdgeInsets.all(2),
+                                margin: EdgeInsets.only(
+                                  top: 15,
+                                  left: 10,
+                                  right: 10,
+                                ),
+                                height: w * 0.9,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(10.0),
+                                  ),
+                                ),
+                                child: Container(
+                                  child: _currentPosition == null
+                                      ? Center(
+                                          child: Image.asset(
+                                            'assets/giffs/map_loading.gif',
+                                            fit: BoxFit.cover,
+                                            //height: w * 0.15,
+                                            width: w * 0.5,
+                                          ),
+                                        )
+                                      : ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          child: GoogleMap(
+                                            onMapCreated: (GoogleMapController
+                                                controller) {
+                                              mapController = controller;
+                                            },
+                                            initialCameraPosition:
+                                                CameraPosition(
+                                              target: _currentPosition!,
+                                              zoom: 15.0,
+                                            ),
+                                            scrollGesturesEnabled: true,
+                                            myLocationEnabled: true,
+                                            myLocationButtonEnabled: true,
+                                            markers: _markers,
+                                            zoomControlsEnabled: true,
+                                          ),
+                                        ),
+                                ),
+                              ),
                       ],
                     ),
                   );
@@ -295,7 +404,13 @@ class _DashboardNewState extends State<DashboardNew> {
                   return SizedBox();
               }
             },
-            listener: (context, state) {},
+            listener: (context, state) {
+              if (state is VehicleListDisplayState) {
+                List<GetVehicles> own_vehicle_list = state.vehicle_list;
+                print("own_vehicle_list length is ${own_vehicle_list.length}");
+                return _showPopup(context, own_vehicle_list);
+              }
+            },
           ),
         ),
       ),
