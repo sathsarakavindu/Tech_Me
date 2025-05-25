@@ -8,6 +8,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:tec_me/model/get_vehicles.dart';
+import 'package:tec_me/model/make_help.dart';
 import 'package:tec_me/view/config/app.dart';
 import 'package:tec_me/view/pages/add_vehicle_page/add_vehicle.dart';
 import 'package:tec_me/view/pages/history/history_technician.dart';
@@ -27,6 +28,7 @@ class DashboardNew extends StatefulWidget {
 class _DashboardNewState extends State<DashboardNew> {
   final PageController _pageController = PageController();
   PersistenceHelper persistenceHelper = PersistenceHelper();
+
   int _currentPage = 0;
   String? username;
   bool getHelp = false;
@@ -52,7 +54,7 @@ class _DashboardNewState extends State<DashboardNew> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Select Your Vehicle'),
+        title: Center(child: const Text('Select Your Vehicle')),
         content: SizedBox(
           width: double.maxFinite,
           height: 300, // Adjust as needed
@@ -70,8 +72,11 @@ class _DashboardNewState extends State<DashboardNew> {
                   ),
                   title: Text(vehicleList[index].vehicle_no),
                   onTap: () {
-                    // You can handle tile tap here
-                    Navigator.pop(context); // Close the dialog
+                    List<GetVehicles> selectedVehicle = [vehicleList[index]];
+
+                    dashboardBlocBloc.add(
+                      SelectVehicleFromList(selectedVehicle: selectedVehicle),
+                    );
                   },
                 ),
               );
@@ -329,15 +334,9 @@ class _DashboardNewState extends State<DashboardNew> {
                                           ),
                                         ),
                                         onPressed: () async {
-                                          // _showPopup(context);
-
                                           dashboardBlocBloc.add(
                                             GetHelpButtonClickedEvent(),
                                           );
-
-                                          // setState(() {
-                                          //   getHelp = true;
-                                          // });
                                         },
                                         style: ElevatedButton.styleFrom(
                                           backgroundColor: Colors.white,
@@ -409,6 +408,11 @@ class _DashboardNewState extends State<DashboardNew> {
                 List<GetVehicles> own_vehicle_list = state.vehicle_list;
                 print("own_vehicle_list length is ${own_vehicle_list.length}");
                 return _showPopup(context, own_vehicle_list);
+              } else if (state is SelectVehicleSuccessfully) {
+                setState(() {
+                  getHelp = true;
+                });
+                Navigator.of(context).pop();
               }
             },
           ),
