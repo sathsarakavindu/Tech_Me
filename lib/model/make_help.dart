@@ -8,6 +8,7 @@ class MakeHelp {
   String nic;
   String contact_no;
   String address;
+  String image_link;
   double latitude;
   double longitude;
 
@@ -21,6 +22,7 @@ class MakeHelp {
     required this.nic,
     required this.contact_no,
     required this.address,
+    required this.image_link,
     required this.latitude,
     required this.longitude,
   });
@@ -36,6 +38,7 @@ class MakeHelp {
       nic: help_list[''],
       contact_no: help_list[''],
       address: help_list[''],
+      image_link: help_list[''],
       latitude: help_list[''],
       longitude: help_list[''],
     );

@@ -87,7 +87,7 @@ class _AddVehicleState extends State<AddVehicle> {
       final fileBytes = await _imageFile!.readAsBytes();
 
       // Upload to the correct folder in the bucket
-      final filePath = 'vehicle images/$fileName' + generateRandomNumber();
+      final filePath = 'vehicle images/$fileName';
 
       final response = await supabase.storage
           .from('images') // bucket name

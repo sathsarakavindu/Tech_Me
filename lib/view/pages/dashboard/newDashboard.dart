@@ -1,6 +1,11 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:ui' as ui;
+
+import 'package:http/http.dart' as http;
 
 import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_notch_bottom_bar.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -31,6 +36,7 @@ class _DashboardNewState extends State<DashboardNew> {
 
   int _currentPage = 0;
   String? username;
+  String? vehicle_image_link;
   bool getHelp = false;
   VehicleAPI vehicleAPI = VehicleAPI();
 
@@ -115,28 +121,57 @@ class _DashboardNewState extends State<DashboardNew> {
     );
   }
 
+  Future<BitmapDescriptor> getCustomMarkerFromNetwork(String imageUrl) async {
+    final http.Response response = await http.get(Uri.parse(imageUrl));
+    final Uint8List bytes = response.bodyBytes;
+
+    final ui.Codec codec = await ui.instantiateImageCodec(
+      bytes,
+      targetWidth: 100, // Adjust size as needed
+    );
+    final ui.FrameInfo fi = await codec.getNextFrame();
+    final ByteData? byteData =
+        await fi.image.toByteData(format: ui.ImageByteFormat.png);
+
+    return BitmapDescriptor.fromBytes(byteData!.buffer.asUint8List());
+  }
+
   Future<void> _getCurrentLocation() async {
     LocationPermission permission;
 
     // Request permission
     permission = await Geolocator.requestPermission();
-    if (permission == LocationPermission.denied) {
-      return;
-    }
+    if (permission == LocationPermission.denied) return;
 
     // Get current position
     Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
+      desiredAccuracy: LocationAccuracy.high,
+    );
 
     LatLng pos = LatLng(position.latitude, position.longitude);
 
+    // Get the vehicle image link from persistenceHelper
+    String? vehicleImageLink =
+        await persistenceHelper.getSelectedVehicleImage();
+
+    BitmapDescriptor customIcon = BitmapDescriptor.defaultMarker;
+    if (vehicleImageLink != null && vehicleImageLink.isNotEmpty) {
+      try {
+        customIcon = await getCustomMarkerFromNetwork(vehicleImageLink);
+      } catch (e) {
+        print("Failed to load vehicle image icon: $e");
+      }
+    }
+
     setState(() {
       _currentPosition = pos;
+      _markers.removeWhere((m) => m.markerId == MarkerId("currentLocation"));
       _markers.add(
         Marker(
           markerId: MarkerId("currentLocation"),
           position: pos,
           infoWindow: InfoWindow(title: "You are here"),
+          icon: customIcon,
         ),
       );
     });
@@ -152,7 +187,7 @@ class _DashboardNewState extends State<DashboardNew> {
   @override
   void initState() {
     super.initState();
-    _getCurrentLocation();
+
     loadUsername();
     dashboardBlocBloc.add(
       DashboardInitialEvent(),
@@ -403,16 +438,19 @@ class _DashboardNewState extends State<DashboardNew> {
                   return SizedBox();
               }
             },
-            listener: (context, state) {
+            listener: (context, state) async {
               if (state is VehicleListDisplayState) {
                 List<GetVehicles> own_vehicle_list = state.vehicle_list;
                 print("own_vehicle_list length is ${own_vehicle_list.length}");
                 return _showPopup(context, own_vehicle_list);
               } else if (state is SelectVehicleSuccessfully) {
-                setState(() {
+                vehicle_image_link =
+                    await persistenceHelper.getSelectedVehicleImage();
+                await _getCurrentLocation();
+                Navigator.of(context).pop();
+                setState(() async {
                   getHelp = true;
                 });
-                Navigator.of(context).pop();
               }
             },
           ),

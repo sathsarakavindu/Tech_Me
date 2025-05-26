@@ -8,6 +8,7 @@ class GetVehicles {
   String model;
   String type;
   String color;
+  
 
   GetVehicles(
       {required this.username,
