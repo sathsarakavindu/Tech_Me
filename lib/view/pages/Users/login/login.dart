@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tec_me/view/config/app.dart';
-import 'package:tec_me/view/pages/dashboard/dashboard.dart';
-import 'package:tec_me/view/pages/dashboard/newDashboard.dart';
-import 'package:tec_me/view/pages/forgot_password/forgot_password.dart';
-import 'package:tec_me/view/pages/register/register.dart';
-import 'package:tec_me/view/pages/sign_up/signup.dart';
+import 'package:tec_me/view/pages/Technicians/technician_dashboard/dashboard_technician.dart';
+import 'package:tec_me/view/pages/Users/dashboard/newDashboard.dart';
+import 'package:tec_me/view/pages/Users/forgot_password/forgot_password.dart';
+import 'package:tec_me/view/pages/Users/register/register.dart';
 import 'package:tec_me/view_model/bloc/bloc/login_bloc.dart';
 import 'package:tec_me/view_model/helperClass/loginUser.dart';
+import 'package:tec_me/view_model/persistence/sharedPreferences.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -17,6 +17,7 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  final PersistenceHelper preferences = PersistenceHelper();
   TextEditingController email_controller = TextEditingController();
   TextEditingController password_controller = TextEditingController();
   UserAuth userAuth = UserAuth();
@@ -270,21 +271,37 @@ class _LoginState extends State<Login> {
               return SizedBox();
           }
         },
-        listener: (context, state) {
+        listener: (context, state) async {
           if (state.runtimeType == LoginSuccessState) {
-            Navigator.push(
-              context,
-              PageRouteBuilder(
-                pageBuilder: (context, animation, secondaryAnimation) =>
-                    DashboardNew(),
-                transitionsBuilder:
-                    (context, animation, secondaryAnimation, child) =>
-                        FadeTransition(
-                  opacity: animation,
-                  child: child,
+            if (await preferences.getAccountType() == "Technician") {
+              Navigator.push(
+                context,
+                PageRouteBuilder(
+                  pageBuilder: (context, animation, secondaryAnimation) =>
+                      DashboardTechnician(),
+                  transitionsBuilder:
+                      (context, animation, secondaryAnimation, child) =>
+                          FadeTransition(
+                    opacity: animation,
+                    child: child,
+                  ),
                 ),
-              ),
-            );
+              );
+            } else {
+              Navigator.push(
+                context,
+                PageRouteBuilder(
+                  pageBuilder: (context, animation, secondaryAnimation) =>
+                      DashboardNew(),
+                  transitionsBuilder:
+                      (context, animation, secondaryAnimation, child) =>
+                          FadeTransition(
+                    opacity: animation,
+                    child: child,
+                  ),
+                ),
+              );
+            }
           } else if (state.runtimeType == LoginFailedState) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(

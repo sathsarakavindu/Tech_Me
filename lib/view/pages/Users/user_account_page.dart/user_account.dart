@@ -2,13 +2,16 @@ import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_not
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tec_me/view/pages/add_vehicle_page/add_vehicle.dart';
-import 'package:tec_me/view/pages/dashboard/newDashboard.dart';
-import 'package:tec_me/view/pages/history/history_technician.dart';
-import 'package:tec_me/view/pages/login/login.dart';
-import 'package:tec_me/view/pages/change_password/change_password.dart';
+import 'package:tec_me/view/pages/Technicians/technician_dashboard/dashboard_technician.dart';
+import 'package:tec_me/view/pages/Technicians/technician_history/technician_history.dart';
+import 'package:tec_me/view/pages/Users/add_vehicle_page/add_vehicle.dart';
+import 'package:tec_me/view/pages/Users/change_password/change_password.dart';
+import 'package:tec_me/view/pages/Users/dashboard/newDashboard.dart';
+import 'package:tec_me/view/pages/Users/history/history_user.dart';
+import 'package:tec_me/view/pages/Users/login/login.dart';
 import 'package:tec_me/view/widgets/account_options_card.dart';
 import 'package:tec_me/view_model/bloc/user_account_bloc/bloc/user_account_bloc.dart';
+import 'package:tec_me/view_model/persistence/sharedPreferences.dart';
 
 class UserAccountPage extends StatefulWidget {
   const UserAccountPage({super.key});
@@ -19,14 +22,33 @@ class UserAccountPage extends StatefulWidget {
 
 class _UserAccountPageState extends State<UserAccountPage> {
   final UserAccountBloc userAccountBloc = UserAccountBloc();
-
+  final PersistenceHelper persistenceHelper = PersistenceHelper();
   final NotchBottomBarController _controller =
       NotchBottomBarController(index: 3);
+  final NotchBottomBarController _controller_technician =
+      NotchBottomBarController(index: 2);
+
+  bool? isUserAccount;
+
+  Future<void> isUser() async {
+    try {
+      if (await persistenceHelper.getAccountType() == "User")
+        setState(() {
+          isUserAccount = true;
+        });
+      else
+        setState(() {
+          isUserAccount = false;
+        });
+    } catch (e) {
+      print("isUser error: $e");
+    }
+  }
 
   @override
   void initState() {
     super.initState();
-
+    isUser();
     userAccountBloc.add(
       UserAccountPageInitialEvent(),
     );
@@ -121,13 +143,33 @@ class _UserAccountPageState extends State<UserAccountPage> {
                             SizedBox(
                               height: w * 0.05,
                             ),
-                            AccountOptionsCard(
-                              option_name: "Edit Vehicle Info",
-                              icon: Icon(Icons.arrow_forward_ios_outlined),
-                              select_option: () {
-                                print("Edit Vehicle Info");
-                              },
-                            ),
+                            isUserAccount == true
+                                ? AccountOptionsCard(
+                                    option_name: "Edit Vehicle Info",
+                                    icon:
+                                        Icon(Icons.arrow_forward_ios_outlined),
+                                    select_option: () {
+                                      print("Edit Vehicle Info");
+                                    },
+                                  )
+                                : AccountOptionsCard(
+                                    option_name: "Edit Profile",
+                                    icon:
+                                        Icon(Icons.arrow_forward_ios_outlined),
+                                    select_option: () {
+                                      print("Edit Profile");
+                                    },
+                                  ),
+                            isUserAccount == true
+                                ? AccountOptionsCard(
+                                    option_name: "Edit Profile",
+                                    icon:
+                                        Icon(Icons.arrow_forward_ios_outlined),
+                                    select_option: () {
+                                      print("Edit Profile");
+                                    },
+                                  )
+                                : SizedBox(),
                             AccountOptionsCard(
                               option_name: "Change Password",
                               icon: Icon(Icons.arrow_forward_ios_outlined),
@@ -187,111 +229,195 @@ class _UserAccountPageState extends State<UserAccountPage> {
           },
         ),
       ),
-      bottomNavigationBar: AnimatedNotchBottomBar(
-        durationInMilliSeconds: 500,
-        notchBottomBarController: _controller,
-        bottomBarItems: [
-          BottomBarItem(
-            inActiveItem: Icon(
-              Icons.home_filled,
-              color: Colors.black,
-            ),
-            activeItem: Icon(
-              Icons.home_filled,
-              color: Colors.black,
-            ),
-            itemLabel: 'Home',
-          ),
-          BottomBarItem(
-            inActiveItem: Image.asset(
-              "assets/images/add_vehicle/add_vehicle.png",
-              color: Colors.black,
-            ),
-            activeItem: Image.asset("assets/images/add_vehicle/add_vehicle.png",
-                color: Colors.black),
-            itemLabel: 'Vehicle',
-          ),
-          BottomBarItem(
-            inActiveItem: Icon(
-              Icons.history,
-              color: Colors.black,
-            ),
-            activeItem: Icon(
-              Icons.history,
-              color: Colors.black,
-            ),
-            itemLabel: 'History',
-          ),
-          BottomBarItem(
-            inActiveItem: Icon(
-              Icons.person,
-              color: Colors.black,
-            ),
-            activeItem: Icon(
-              Icons.person,
-              color: Colors.black,
-            ),
-            itemLabel: 'Account',
-          ),
-        ],
-        onTap: (value) {
-          _controller.index = value;
-          if (kDebugMode) {
-            print("Selected index: $value");
-          }
-          switch (value) {
-            case 0:
-              Navigator.push(
-                context,
-                PageRouteBuilder(
-                  pageBuilder: (context, animation, secondaryAnimation) =>
-                      DashboardNew(),
-                  transitionsBuilder:
-                      (context, animation, secondaryAnimation, child) =>
-                          FadeTransition(
-                    opacity: animation,
-                    child: child,
+      bottomNavigationBar: isUserAccount == true
+          ? AnimatedNotchBottomBar(
+              durationInMilliSeconds: 500,
+              notchBottomBarController: _controller,
+              bottomBarItems: [
+                BottomBarItem(
+                  inActiveItem: Icon(
+                    Icons.home_filled,
+                    color: Colors.black,
                   ),
-                ),
-              );
-              break;
-            case 1:
-              Navigator.push(
-                context,
-                PageRouteBuilder(
-                  pageBuilder: (context, animation, secondaryAnimation) =>
-                      AddVehicle(),
-                  transitionsBuilder:
-                      (context, animation, secondaryAnimation, child) =>
-                          FadeTransition(
-                    opacity: animation,
-                    child: child,
+                  activeItem: Icon(
+                    Icons.home_filled,
+                    color: Colors.black,
                   ),
+                  itemLabel: 'Home',
                 ),
-              );
-              break;
-            case 2:
-              Navigator.push(
-                context,
-                PageRouteBuilder(
-                  pageBuilder: (context, animation, secondaryAnimation) =>
-                      HistoryTechnician(),
-                  transitionsBuilder:
-                      (context, animation, secondaryAnimation, child) =>
-                          FadeTransition(
-                    opacity: animation,
-                    child: child,
+                BottomBarItem(
+                  inActiveItem: Image.asset(
+                    "assets/images/add_vehicle/add_vehicle.png",
+                    color: Colors.black,
                   ),
+                  activeItem: Image.asset(
+                      "assets/images/add_vehicle/add_vehicle.png",
+                      color: Colors.black),
+                  itemLabel: 'Vehicle',
                 ),
-              );
-              break;
-            case 3:
-              break;
-          }
-        },
-        kIconSize: 30,
-        kBottomRadius: 12.0,
-      ),
+                BottomBarItem(
+                  inActiveItem: Icon(
+                    Icons.history,
+                    color: Colors.black,
+                  ),
+                  activeItem: Icon(
+                    Icons.history,
+                    color: Colors.black,
+                  ),
+                  itemLabel: 'History',
+                ),
+                BottomBarItem(
+                  inActiveItem: Icon(
+                    Icons.person,
+                    color: Colors.black,
+                  ),
+                  activeItem: Icon(
+                    Icons.person,
+                    color: Colors.black,
+                  ),
+                  itemLabel: 'Account',
+                ),
+              ],
+              onTap: (value) {
+                _controller.index = value;
+                if (kDebugMode) {
+                  print("Selected index: $value");
+                }
+                switch (value) {
+                  case 0:
+                    Navigator.push(
+                      context,
+                      PageRouteBuilder(
+                        pageBuilder: (context, animation, secondaryAnimation) =>
+                            DashboardNew(),
+                        transitionsBuilder:
+                            (context, animation, secondaryAnimation, child) =>
+                                FadeTransition(
+                          opacity: animation,
+                          child: child,
+                        ),
+                      ),
+                    );
+                    break;
+                  case 1:
+                    Navigator.push(
+                      context,
+                      PageRouteBuilder(
+                        pageBuilder: (context, animation, secondaryAnimation) =>
+                            AddVehicle(),
+                        transitionsBuilder:
+                            (context, animation, secondaryAnimation, child) =>
+                                FadeTransition(
+                          opacity: animation,
+                          child: child,
+                        ),
+                      ),
+                    );
+                    break;
+                  case 2:
+                    Navigator.push(
+                      context,
+                      PageRouteBuilder(
+                        pageBuilder: (context, animation, secondaryAnimation) =>
+                            HistoryUser(),
+                        transitionsBuilder:
+                            (context, animation, secondaryAnimation, child) =>
+                                FadeTransition(
+                          opacity: animation,
+                          child: child,
+                        ),
+                      ),
+                    );
+                    break;
+                  case 3:
+                    break;
+                }
+              },
+              kIconSize: 30,
+              kBottomRadius: 12.0,
+            )
+          : AnimatedNotchBottomBar(
+              durationInMilliSeconds: 500,
+              notchBottomBarController: _controller_technician,
+              bottomBarItems: [
+                BottomBarItem(
+                  inActiveItem: Icon(
+                    Icons.home_filled,
+                    color: Colors.black,
+                  ),
+                  activeItem: Icon(
+                    Icons.home_filled,
+                    color: Colors.black,
+                  ),
+                  itemLabel: 'Home',
+                ),
+                BottomBarItem(
+                  inActiveItem: Icon(
+                    Icons.history,
+                    color: Colors.black,
+                  ),
+                  activeItem: Icon(
+                    Icons.history,
+                    color: Colors.black,
+                  ),
+                  itemLabel: 'History',
+                ),
+                BottomBarItem(
+                  inActiveItem: Icon(
+                    Icons.person,
+                    color: Colors.black,
+                  ),
+                  activeItem: Icon(
+                    Icons.person,
+                    color: Colors.black,
+                  ),
+                  itemLabel: 'Account',
+                ),
+              ],
+              onTap: (value) {
+                _controller_technician.index = value;
+                if (kDebugMode) {
+                  print("Selected index: $value");
+                }
+                switch (value) {
+                  case 0:
+                    Navigator.push(
+                      context,
+                      PageRouteBuilder(
+                        pageBuilder: (context, animation, secondaryAnimation) =>
+                            DashboardTechnician(),
+                        transitionsBuilder:
+                            (context, animation, secondaryAnimation, child) =>
+                                FadeTransition(
+                          opacity: animation,
+                          child: child,
+                        ),
+                      ),
+                    );
+                    break;
+
+                  case 1:
+                    Navigator.push(
+                      context,
+                      PageRouteBuilder(
+                        pageBuilder: (context, animation, secondaryAnimation) =>
+                            TechnicianHistory(),
+                        transitionsBuilder:
+                            (context, animation, secondaryAnimation, child) =>
+                                FadeTransition(
+                          opacity: animation,
+                          child: child,
+                        ),
+                      ),
+                    );
+                    break;
+                  case 2:
+                    break;
+                }
+              },
+              kIconSize: 30,
+              kBottomRadius: 12.0,
+            ),
     );
   }
 }
