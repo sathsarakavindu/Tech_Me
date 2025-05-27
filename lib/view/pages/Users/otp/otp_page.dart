@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tec_me/view/config/app.dart';
-import 'package:tec_me/view/pages/create_new_password_change/create_new_password.dart';
+import 'package:tec_me/view/pages/Users/create_new_password_change/create_new_password.dart';
 import 'package:tec_me/view_model/bloc/otp_bloc/bloc/otp_bloc.dart';
 
 class OtpPage extends StatefulWidget {

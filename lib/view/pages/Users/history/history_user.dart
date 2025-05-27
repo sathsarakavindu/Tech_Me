@@ -1,20 +1,20 @@
 import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_notch_bottom_bar.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:tec_me/view/pages/add_vehicle_page/add_vehicle.dart';
-import 'package:tec_me/view/pages/dashboard/newDashboard.dart';
-import 'package:tec_me/view/pages/user_account_page.dart/user_account.dart';
+import 'package:tec_me/view/pages/Users/add_vehicle_page/add_vehicle.dart';
+import 'package:tec_me/view/pages/Users/dashboard/newDashboard.dart';
+import 'package:tec_me/view/pages/Users/user_account_page.dart/user_account.dart';
 import 'package:tec_me/view/widgets/user_history_card.dart';
 import 'package:tec_me/view_model/bloc/user_history_bloc/bloc/user_history_bloc.dart';
 
-class HistoryTechnician extends StatefulWidget {
-  const HistoryTechnician({super.key});
+class HistoryUser extends StatefulWidget {
+  const HistoryUser({super.key});
 
   @override
-  State<HistoryTechnician> createState() => _HistoryTechnicianState();
+  State<HistoryUser> createState() => _HistoryUserState();
 }
 
-class _HistoryTechnicianState extends State<HistoryTechnician> {
+class _HistoryUserState extends State<HistoryUser> {
   final NotchBottomBarController _controller =
       NotchBottomBarController(index: 2);
 
@@ -138,7 +138,7 @@ class _HistoryTechnicianState extends State<HistoryTechnician> {
             case 2:
               break;
             case 3:
-             Navigator.push(
+              Navigator.push(
                 context,
                 PageRouteBuilder(
                   pageBuilder: (context, animation, secondaryAnimation) =>

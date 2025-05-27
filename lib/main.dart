@@ -3,15 +3,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:tec_me/test_page.dart';
-import 'package:tec_me/view/pages/add_vehicle_page/add_vehicle.dart';
-import 'package:tec_me/view/pages/create_new_password_change/create_new_password.dart';
-import 'package:tec_me/view/pages/dashboard/dashboard.dart';
-import 'package:tec_me/view/pages/dashboard/newDashboard.dart';
-import 'package:tec_me/view/pages/edit_vehicle_page/edit_vehicle_page.dart';
-import 'package:tec_me/view/pages/history/history_technician.dart';
-import 'package:tec_me/view/pages/login/login.dart';
-import 'package:tec_me/view/pages/change_password/change_password.dart';
-import 'package:tec_me/view/pages/user_account_page.dart/user_account.dart';
+import 'package:tec_me/view/pages/Technicians/technician_dashboard/dashboard_technician.dart';
+import 'package:tec_me/view/pages/Users/dashboard/newDashboard.dart';
+import 'package:tec_me/view/pages/Users/login/login.dart';
+import 'package:tec_me/view_model/persistence/sharedPreferences.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,7 +15,29 @@ Future<void> main() async {
     anonKey:
         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhwcHJ4aG5oZ3hlaXFhZXBtcm9vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ4OTE1MTUsImV4cCI6MjA2MDQ2NzUxNX0.rH7LBY9ilNZpbkhfsRkHE4QbGMBuOMuxn4QSQRlZt-4',
   );
-  runApp(const MyApp());
+  // runApp(const MyApp());
+  await isEmailAvailable();
+}
+
+Future<void> isEmailAvailable() async {
+  final preferences = PersistenceHelper();
+  String email = await preferences.getEmail();
+  print(email);
+  if (email.isNotEmpty) {
+    if (await preferences.getAccountType() == "Technician") {
+      runApp(
+        const VerifiedTechnicianDashboard(),
+      );
+    } else {
+      runApp(
+        const VerifiedUserDashboard(),
+      );
+    }
+  } else {
+    runApp(
+      const MyApp(),
+    );
+  }
 }
 
 // void main() => runApp(
@@ -33,7 +50,6 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -44,7 +60,40 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: Login(),
-      // home: NewPasswordPage(),
+    );
+  }
+}
+
+class VerifiedTechnicianDashboard extends StatelessWidget {
+  const VerifiedTechnicianDashboard({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        useMaterial3: true,
+      ),
+      home: DashboardTechnician(),
+    );
+  }
+}
+
+class VerifiedUserDashboard extends StatelessWidget {
+  const VerifiedUserDashboard({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        useMaterial3: true,
+      ),
+      home: DashboardNew(),
     );
   }
 }

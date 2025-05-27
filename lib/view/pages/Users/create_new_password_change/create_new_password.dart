@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tec_me/view/config/app.dart';
-import 'package:tec_me/view/pages/login/login.dart';
+import 'package:tec_me/view/pages/Users/login/login.dart';
+
 import 'package:tec_me/view_model/bloc/create_new_password_bloc/bloc/create_new_password_bloc.dart';
 
 class NewPasswordPage extends StatefulWidget {

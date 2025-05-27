@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tec_me/view/config/app.dart';
-import 'package:tec_me/view/pages/otp/otp_page.dart';
-import 'package:tec_me/view/pages/sign_up/signup.dart';
+import 'package:tec_me/view/pages/Users/otp/otp_page.dart';
+
 import 'package:tec_me/view_model/bloc/forgot_password_bloc/bloc/forgot_password_bloc.dart';
 
 class ForgotPassword extends StatefulWidget {

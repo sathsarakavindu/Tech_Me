@@ -9,9 +9,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:tec_me/view/config/app.dart';
-import 'package:tec_me/view/pages/dashboard/newDashboard.dart';
-import 'package:tec_me/view/pages/history/history_technician.dart';
-import 'package:tec_me/view/pages/user_account_page.dart/user_account.dart';
+import 'package:tec_me/view/pages/Users/dashboard/newDashboard.dart';
+import 'package:tec_me/view/pages/Users/history/history_user.dart';
+import 'package:tec_me/view/pages/Users/user_account_page.dart/user_account.dart';
 import 'package:tec_me/view/widgets/text_form_field.dart';
 import 'package:tec_me/view_model/bloc/addVehicleBloc/bloc/add_vehicle_bloc.dart';
 import 'package:tec_me/view_model/persistence/sharedPreferences.dart';
@@ -437,7 +437,7 @@ class _AddVehicleState extends State<AddVehicle> {
                 context,
                 PageRouteBuilder(
                   pageBuilder: (context, animation, secondaryAnimation) =>
-                      HistoryTechnician(),
+                      HistoryUser(),
                   transitionsBuilder:
                       (context, animation, secondaryAnimation, child) =>
                           FadeTransition(

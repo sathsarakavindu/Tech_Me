@@ -2,7 +2,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tec_me/view/config/app.dart';
-import 'package:tec_me/view/pages/login/login.dart';
 import 'package:tec_me/view_model/bloc/change_password_bloc/bloc/change_password_bloc.dart';
 
 class ChangePassword extends StatefulWidget {

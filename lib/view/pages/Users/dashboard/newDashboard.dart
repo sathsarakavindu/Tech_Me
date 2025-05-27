@@ -15,9 +15,10 @@ import 'package:shimmer/shimmer.dart';
 import 'package:tec_me/model/get_vehicles.dart';
 import 'package:tec_me/model/make_help.dart';
 import 'package:tec_me/view/config/app.dart';
-import 'package:tec_me/view/pages/add_vehicle_page/add_vehicle.dart';
-import 'package:tec_me/view/pages/history/history_technician.dart';
-import 'package:tec_me/view/pages/user_account_page.dart/user_account.dart';
+import 'package:tec_me/view/pages/Users/add_vehicle_page/add_vehicle.dart';
+import 'package:tec_me/view/pages/Users/history/history_user.dart';
+import 'package:tec_me/view/pages/Users/user_account_page.dart/user_account.dart';
+
 import 'package:tec_me/view/widgets/vehicle_card.dart';
 import 'package:tec_me/view_model/bloc/dashboardBloc/bloc/dashboard_bloc_bloc.dart';
 import 'package:tec_me/view_model/helperClass/vehicleApi.dart';
@@ -59,39 +60,123 @@ class _DashboardNewState extends State<DashboardNew> {
   void _showPopup(BuildContext context, List<GetVehicles> vehicleList) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Center(child: const Text('Select Your Vehicle')),
-        content: SizedBox(
-          width: double.maxFinite,
-          height: 300, // Adjust as needed
-          child: ListView.builder(
-            itemCount: vehicleList.length,
-            itemBuilder: (context, index) {
-              return Card(
-                margin: const EdgeInsets.symmetric(vertical: 8),
-                child: ListTile(
-                  leading: Image.network(
-                    vehicleList[index].image_url,
-                    width: 50,
-                    height: 50,
-                    fit: BoxFit.cover,
-                  ),
-                  title: Text(vehicleList[index].vehicle_no),
-                  onTap: () {
-                    List<GetVehicles> selectedVehicle = [vehicleList[index]];
+      barrierDismissible: true,
+      builder: (context) => Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                'Select Your Vehicle',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF000b58),
+                ),
+              ),
+              const SizedBox(height: 16),
+              SizedBox(
+                height: 300, // Adjust as needed
+                width: double.maxFinite,
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: vehicleList.length,
+                  itemBuilder: (context, index) {
+                    final vehicle = vehicleList[index];
 
-                    dashboardBlocBloc.add(
-                      SelectVehicleFromList(selectedVehicle: selectedVehicle),
+                    return GestureDetector(
+                      onTap: () {
+                        List<GetVehicles> selectedVehicle = [vehicle];
+                        dashboardBlocBloc.add(
+                          SelectVehicleFromList(
+                              selectedVehicle: selectedVehicle),
+                        );
+                        Navigator.pop(context); // Close dialog
+                      },
+                      child: Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        elevation: 4,
+                        margin: const EdgeInsets.symmetric(vertical: 8),
+                        child: ListTile(
+                          leading: ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: Image.network(
+                              vehicle.image_url,
+                              width: 50,
+                              height: 50,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                          title: Text(
+                            vehicle.vehicle_no,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          trailing: const Icon(Icons.arrow_forward_ios_rounded,
+                              size: 16),
+                        ),
+                      ),
                     );
                   },
                 ),
-              );
-            },
+              ),
+              const SizedBox(height: 12),
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text(
+                  'Cancel',
+                  style: TextStyle(color: Colors.redAccent),
+                ),
+              )
+            ],
           ),
         ),
       ),
     );
   }
+
+  // void _showPopup(BuildContext context, List<GetVehicles> vehicleList) {
+  //   showDialog(
+  //     context: context,
+  //     builder: (context) => AlertDialog(
+  //       title: Center(child: const Text('Select Your Vehicle')),
+  //       content: SizedBox(
+  //         width: double.maxFinite,
+  //         height: 300, // Adjust as needed
+  //         child: ListView.builder(
+  //           itemCount: vehicleList.length,
+  //           itemBuilder: (context, index) {
+  //             return Card(
+  //               margin: const EdgeInsets.symmetric(vertical: 8),
+  //               child: ListTile(
+  //                 leading: Image.network(
+  //                   vehicleList[index].image_url,
+  //                   width: 50,
+  //                   height: 50,
+  //                   fit: BoxFit.cover,
+  //                 ),
+  //                 title: Text(vehicleList[index].vehicle_no),
+  //                 onTap: () {
+  //                   List<GetVehicles> selectedVehicle = [vehicleList[index]];
+
+  //                   dashboardBlocBloc.add(
+  //                     SelectVehicleFromList(selectedVehicle: selectedVehicle),
+  //                   );
+  //                 },
+  //               ),
+  //             );
+  //           },
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
 
   Widget hotelShimmer() {
     double w = MediaQuery.of(context).size.width;
@@ -263,6 +348,7 @@ class _DashboardNewState extends State<DashboardNew> {
                           width: w * 0.98,
                           height: w * 0.50,
                           decoration: BoxDecoration(
+                            border: Border.all(color: Colors.white, width: 1),
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(10.0),
                           ),
@@ -531,7 +617,7 @@ class _DashboardNewState extends State<DashboardNew> {
                 context,
                 PageRouteBuilder(
                   pageBuilder: (context, animation, secondaryAnimation) =>
-                      HistoryTechnician(),
+                      HistoryUser(),
                   transitionsBuilder:
                       (context, animation, secondaryAnimation, child) =>
                           FadeTransition(
