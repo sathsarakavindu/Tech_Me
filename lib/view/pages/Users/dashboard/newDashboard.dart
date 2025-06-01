@@ -57,6 +57,20 @@ class _DashboardNewState extends State<DashboardNew> {
   LatLng? _currentPosition;
   final Set<Marker> _markers = {};
 
+  void checkGetHelpStatus() async {
+    bool isGetHelp = await persistenceHelper.getHelpStatus();
+    if (isGetHelp) {
+      setState(() {
+        getHelp = true;
+      });
+      await _getCurrentLocation();
+    } else {
+      setState(() {
+        getHelp = false;
+      });
+    }
+  }
+
   void _showPopup(BuildContext context, List<GetVehicles> vehicleList) {
     showDialog(
       context: context,
@@ -141,42 +155,57 @@ class _DashboardNewState extends State<DashboardNew> {
     );
   }
 
-  // void _showPopup(BuildContext context, List<GetVehicles> vehicleList) {
-  //   showDialog(
-  //     context: context,
-  //     builder: (context) => AlertDialog(
-  //       title: Center(child: const Text('Select Your Vehicle')),
-  //       content: SizedBox(
-  //         width: double.maxFinite,
-  //         height: 300, // Adjust as needed
-  //         child: ListView.builder(
-  //           itemCount: vehicleList.length,
-  //           itemBuilder: (context, index) {
-  //             return Card(
-  //               margin: const EdgeInsets.symmetric(vertical: 8),
-  //               child: ListTile(
-  //                 leading: Image.network(
-  //                   vehicleList[index].image_url,
-  //                   width: 50,
-  //                   height: 50,
-  //                   fit: BoxFit.cover,
-  //                 ),
-  //                 title: Text(vehicleList[index].vehicle_no),
-  //                 onTap: () {
-  //                   List<GetVehicles> selectedVehicle = [vehicleList[index]];
-
-  //                   dashboardBlocBloc.add(
-  //                     SelectVehicleFromList(selectedVehicle: selectedVehicle),
-  //                   );
-  //                 },
-  //               ),
-  //             );
-  //           },
-  //         ),
-  //       ),
-  //     ),
-  //   );
-  // }
+  void _showCancelHelp(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (context) => Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                'Do you want to cancel the help request?',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF000b58),
+                ),
+              ),
+              const SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  TextButton(
+                    onPressed: () => dashboardBlocBloc.add(
+                      CancelledHelpRequest(),
+                    ),
+                    child: const Text(
+                      'Yes',
+                      style: TextStyle(color: Colors.redAccent),
+                    ),
+                  ),
+                  const SizedBox(width: 20),
+                  TextButton(
+                    onPressed: () => dashboardBlocBloc.add(
+                      NotCancelledHelpRequest(),
+                    ),
+                    child: const Text(
+                      'No',
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 
   Widget hotelShimmer() {
     double w = MediaQuery.of(context).size.width;
@@ -251,14 +280,15 @@ class _DashboardNewState extends State<DashboardNew> {
     setState(() {
       _currentPosition = pos;
       _markers.removeWhere((m) => m.markerId == MarkerId("currentLocation"));
-      _markers.add(
-        Marker(
-          markerId: MarkerId("currentLocation"),
-          position: pos,
-          infoWindow: InfoWindow(title: "You are here"),
-          icon: customIcon,
+      _markers.add(Marker(
+        markerId: MarkerId("currentLocation"),
+        position: pos,
+        infoWindow: InfoWindow(title: "You are here"),
+        icon: customIcon,
+        onTap: () => dashboardBlocBloc.add(
+          CancelHelpRequestEvent(),
         ),
-      );
+      ));
     });
 
     // Move the camera
@@ -272,7 +302,7 @@ class _DashboardNewState extends State<DashboardNew> {
   @override
   void initState() {
     super.initState();
-
+    checkGetHelpStatus();
     loadUsername();
     dashboardBlocBloc.add(
       DashboardInitialEvent(),
@@ -529,14 +559,21 @@ class _DashboardNewState extends State<DashboardNew> {
                 List<GetVehicles> own_vehicle_list = state.vehicle_list;
                 print("own_vehicle_list length is ${own_vehicle_list.length}");
                 return _showPopup(context, own_vehicle_list);
-              } else if (state is SelectVehicleSuccessfully) {
+              } else if (state is SelectVehicleSuccessfullyState) {
                 vehicle_image_link =
                     await persistenceHelper.getSelectedVehicleImage();
                 await _getCurrentLocation();
-                Navigator.of(context).pop();
+                //Navigator.of(context).pop();
+                await persistenceHelper.setHelpStatus(true);
                 setState(() async {
                   getHelp = true;
                 });
+              } else if (state is DisplayCancelHelpRequestState) {
+                _showCancelHelp(context);
+              } else if (state is CancelHelpRequestSuccessState) {
+                Navigator.of(context).pop();
+              } else if (state is NotCancelHelpRequestState) {
+                Navigator.of(context).pop();
               }
             },
           ),
