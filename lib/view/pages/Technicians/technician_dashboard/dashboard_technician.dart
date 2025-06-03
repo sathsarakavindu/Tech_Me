@@ -12,6 +12,7 @@ import 'package:tec_me/view/pages/Technicians/technician_history/technician_hist
 import 'package:tec_me/view/pages/Users/history/history_user.dart';
 import 'package:tec_me/view/pages/Users/user_account_page.dart/user_account.dart';
 import 'package:tec_me/view_model/helperClass/make_help.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'package:tec_me/view_model/persistence/sharedPreferences.dart';
 
@@ -47,6 +48,153 @@ class _DashboardTechnicianState extends State<DashboardTechnician> {
   void loadUsername() async {
     username = await persistenceHelper.getName();
     print("Username from SharedPreferences: $username");
+  }
+
+  void selectedUserInfo(
+      {required String name,
+      required String vehicle_image,
+      required String vehicle_no,
+      required String vehicle_model,
+      required String contact_no,
+      required String address}) {
+    showModalBottomSheet(
+      isScrollControlled: true,
+      backgroundColor: Colors.white,
+      barrierColor: Colors.black,
+      context: context,
+      builder: (context) {
+        return DraggableScrollableSheet(
+            expand: false,
+            initialChildSize: 0.6,
+            minChildSize: 0.3,
+            maxChildSize: 0.9,
+            builder: (_, controller) {
+              return SingleChildScrollView(
+                child: Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.all(10),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: vehicle_image.isNotEmpty
+                            ? Image.network(
+                                vehicle_image,
+                                width: double.infinity,
+                                height: 150,
+                                fit: BoxFit.cover,
+                              )
+                            : Image.asset(
+                                'assets/images/default_vehicle.png',
+                                width: double.infinity,
+                                height: 150,
+                                fit: BoxFit.cover,
+                              ),
+                      ),
+                      SizedBox(height: 16),
+                      Text(
+                        name,
+                        style: TextStyle(
+                            fontFamily: AppConfig.font_bold_family,
+                            //fontWeight: FontWeight.w500,
+                            fontSize: 20),
+                      ),
+                      Text(
+                        vehicle_no,
+                        style: TextStyle(
+                            fontFamily: AppConfig.font_bold_family,
+                            //fontWeight: FontWeight.w500,
+                            fontSize: 20),
+                      ),
+                      Text(
+                        vehicle_model,
+                        style: TextStyle(
+                            fontFamily: AppConfig.font_bold_family,
+                            //fontWeight: FontWeight.w500,
+                            fontSize: 20),
+                      ),
+                      Text(
+                        contact_no,
+                        style: TextStyle(
+                            fontFamily: AppConfig.font_bold_family,
+                            //fontWeight: FontWeight.w500,
+                            fontSize: 20),
+                      ),
+                      Text(
+                        address,
+                        style: TextStyle(
+                            fontFamily: AppConfig.font_bold_family,
+                            //fontWeight: FontWeight.w500,
+                            fontSize: 20),
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(top: 20),
+                        child: GestureDetector(
+                          onTap: () {
+                            // Do something with the contact_no here
+                            print("Contact Number is: $contact_no");
+
+                            // Optional: Launch phone dialer (requires url_launcher package)
+                            launchUrl(Uri.parse("tel:$contact_no"));
+                          },
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(30.0),
+                            child: Image.asset(
+                                "assets/icons/dashboard_icon/ic_answer.png"),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        margin: EdgeInsets.symmetric(horizontal: 40),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Color(0xFF000b58),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                              onPressed: () => Navigator.pop(context),
+                              child: Text(
+                                "Approve",
+                                style: TextStyle(
+                                  color: const ui.Color.fromARGB(
+                                      255, 233, 232, 232),
+                                  fontFamily: AppConfig.font_bold_family,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                              onPressed: () => Navigator.pop(context),
+                              child: Text(
+                                "Cancel",
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontFamily: AppConfig.font_bold_family,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            });
+      },
+    );
   }
 
   Future<void> isUser() async {
@@ -100,10 +248,17 @@ class _DashboardTechnicianState extends State<DashboardTechnician> {
                 MarkerId("help_${user.nic}"), // Use unique ID from database
             position: userPosition,
             infoWindow: InfoWindow(
-              title: user.user_name,
-              snippet: "${user.model} - ${user.vehicle_no}",
-            ),
+                // title: user.user_name,
+                // snippet: "${user.model} - ${user.vehicle_no}",
+                ),
             icon: userIcon,
+            onTap: () => selectedUserInfo(
+                name: user.user_name,
+                address: user.address,
+                contact_no: user.contact_no,
+                vehicle_no: user.vehicle_no,
+                vehicle_image: user.image_link,
+                vehicle_model: user.model),
           ),
         );
       }
