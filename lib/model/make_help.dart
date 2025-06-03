@@ -29,18 +29,18 @@ class MakeHelp {
 
   factory MakeHelp.fromJson(Map<String, dynamic> help_list) {
     return MakeHelp(
-      user_name: help_list[''],
-      email: help_list[''],
-      vehicle_no: help_list[''],
-      model: help_list[''],
-      type: help_list[''],
-      color: help_list[''],
-      nic: help_list[''],
-      contact_no: help_list[''],
-      address: help_list[''],
-      image_link: help_list[''],
-      latitude: help_list[''],
-      longitude: help_list[''],
+      user_name: help_list['user_name'],
+      email: help_list['email'],
+      vehicle_no: help_list['vehicle_no'],
+      model: help_list['model'],
+      type: help_list['type'],
+      color: help_list['color'],
+      nic: help_list['nic'],
+      contact_no: help_list['contact_no'],
+      address: help_list['address'],
+      image_link: help_list['vehicle_image'],
+      latitude: help_list['latitude'],
+      longitude: help_list['longitude'],
     );
   }
 

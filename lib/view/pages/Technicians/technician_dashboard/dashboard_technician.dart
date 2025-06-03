@@ -1,14 +1,17 @@
 import 'dart:async';
-
+import 'dart:ui' as ui;
 import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_notch_bottom_bar.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:tec_me/model/make_help.dart';
 import 'package:tec_me/view/config/app.dart';
 import 'package:tec_me/view/pages/Technicians/technician_history/technician_history.dart';
 import 'package:tec_me/view/pages/Users/history/history_user.dart';
 import 'package:tec_me/view/pages/Users/user_account_page.dart/user_account.dart';
+import 'package:tec_me/view_model/helperClass/make_help.dart';
 
 import 'package:tec_me/view_model/persistence/sharedPreferences.dart';
 
@@ -23,9 +26,13 @@ class _DashboardTechnicianState extends State<DashboardTechnician> {
   String? username;
   final PageController _pageController = PageController();
   PersistenceHelper persistenceHelper = PersistenceHelper();
+  final GetHelp getHelp = GetHelp();
   int _currentPage = 0;
   bool? isUserAccount;
   GoogleMapController? mapController;
+  Timer? _refreshTimer;
+  // Keep track of help request markers separately
+  Set<Marker> _helpMarkers = {};
   LatLng? _currentPosition;
   final Set<Marker> _markers = {};
   final NotchBottomBarController _controller =
@@ -57,7 +64,121 @@ class _DashboardTechnicianState extends State<DashboardTechnician> {
     }
   }
 
+  // Start periodic refresh every 10 seconds (adjust as needed)
+  void _startPeriodicRefresh() {
+    _refreshTimer = Timer.periodic(Duration(seconds: 10), (timer) {
+      _refreshHelpMarkers();
+    });
+  }
+
+  // Refresh only help markers, not current location
+  Future<void> _refreshHelpMarkers() async {
+    try {
+      List<MakeHelp> users = await getHelp.getMadeHelps();
+      Set<Marker> newHelpMarkers = {};
+
+      print("Refreshing help markers. Found ${users.length} active helps");
+
+      for (int i = 0; i < users.length; i++) {
+        MakeHelp user = users[i];
+        LatLng userPosition = LatLng(user.latitude, user.longitude);
+
+        BitmapDescriptor userIcon =
+            BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue);
+
+        if (user.image_link.isNotEmpty) {
+          try {
+            userIcon = await getCustomMarkerFromNetwork(user.image_link);
+          } catch (e) {
+            print("Error loading marker icon for ${user.user_name}: $e");
+          }
+        }
+
+        newHelpMarkers.add(
+          Marker(
+            markerId:
+                MarkerId("help_${user.nic}"), // Use unique ID from database
+            position: userPosition,
+            infoWindow: InfoWindow(
+              title: user.user_name,
+              snippet: "${user.model} - ${user.vehicle_no}",
+            ),
+            icon: userIcon,
+          ),
+        );
+      }
+
+      setState(() {
+        // Remove old help markers
+        _markers.removeAll(_helpMarkers);
+
+        // Add new help markers
+        _helpMarkers = newHelpMarkers;
+        _markers.addAll(_helpMarkers);
+      });
+    } catch (e) {
+      print("Error refreshing help markers: $e");
+    }
+  }
+
+  Future<BitmapDescriptor> getCustomMarkerFromNetwork(String imageUrl) async {
+    final Uint8List bytes =
+        (await NetworkAssetBundle(Uri.parse(imageUrl)).load(imageUrl))
+            .buffer
+            .asUint8List();
+
+    final ui.Codec codec =
+        await ui.instantiateImageCodec(bytes, targetWidth: 100);
+    final ui.FrameInfo fi = await codec.getNextFrame();
+    final ByteData? byteData =
+        await fi.image.toByteData(format: ui.ImageByteFormat.png);
+    final Uint8List resizedBytes = byteData!.buffer.asUint8List();
+
+    return BitmapDescriptor.fromBytes(resizedBytes);
+  }
+
   Future<void> _getCurrentLocation() async {
+    LocationPermission permission;
+    permission = await Geolocator.requestPermission();
+    if (permission == LocationPermission.denied) return;
+
+    Position position = await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high,
+    );
+
+    LatLng pos = LatLng(position.latitude, position.longitude);
+
+    String? imageLink = await persistenceHelper.getSelectedVehicleImage();
+    BitmapDescriptor customIcon = BitmapDescriptor.defaultMarker;
+
+    if (imageLink != null && imageLink.isNotEmpty) {
+      try {
+        customIcon = await getCustomMarkerFromNetwork(imageLink);
+      } catch (e) {
+        print("Failed to load current location image icon: $e");
+      }
+    }
+
+    setState(() {
+      _currentPosition = pos;
+      _markers.add(
+        Marker(
+          markerId: MarkerId("currentLocation"),
+          position: pos,
+          infoWindow: InfoWindow(title: "You are here"),
+          icon: customIcon,
+        ),
+      );
+    });
+
+    mapController?.animateCamera(
+      CameraUpdate.newCameraPosition(
+        CameraPosition(target: pos, zoom: 15),
+      ),
+    );
+  }
+
+/*  Future<void> _getCurrentLocation() async {
     LocationPermission permission;
 
     // Request permission
@@ -91,11 +212,17 @@ class _DashboardTechnicianState extends State<DashboardTechnician> {
       ),
     );
   }
+*/
+
+  Future<void> manualRefresh() async {
+    await _refreshHelpMarkers();
+  }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    fetchUserLocations();
     isUser();
     loadUsername();
     _getCurrentLocation();
@@ -110,6 +237,57 @@ class _DashboardTechnicianState extends State<DashboardTechnician> {
         duration: Duration(milliseconds: 400),
         curve: Curves.easeInOut,
       );
+    });
+    // Start periodic refresh for real-time updates
+    _startPeriodicRefresh();
+  }
+
+  @override
+  void dispose() {
+    _refreshTimer?.cancel();
+    super.dispose();
+  }
+
+  Future<void> fetchUserLocations() async {
+    List<MakeHelp> users = await getHelp.getMadeHelps();
+    Set<Marker> userMarkers = {};
+
+    print("User list length: ${users.length}");
+
+    for (int i = 0; i < users.length; i++) {
+      MakeHelp user = users[i];
+      LatLng userPosition = LatLng(user.latitude, user.longitude);
+
+      BitmapDescriptor userIcon =
+          BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue);
+
+      if (user.image_link.isNotEmpty) {
+        try {
+          userIcon = await getCustomMarkerFromNetwork(user.image_link);
+        } catch (e) {
+          print("Error loading marker icon for ${user.user_name}: $e");
+        }
+      }
+
+      print(
+          "Adding marker for ${user.user_name} at ${user.latitude}, ${user.longitude}");
+
+      userMarkers.add(
+        Marker(
+          markerId: MarkerId("help_${user.nic}"), // Use unique ID from database
+          position: userPosition,
+          infoWindow: InfoWindow(
+            title: user.user_name,
+            snippet: "${user.model} - ${user.vehicle_no}",
+          ),
+          icon: userIcon,
+        ),
+      );
+    }
+
+    setState(() {
+      _helpMarkers = userMarkers;
+      _markers.addAll(userMarkers);
     });
   }
 

@@ -572,6 +572,12 @@ class _DashboardNewState extends State<DashboardNew> {
                 _showCancelHelp(context);
               } else if (state is CancelHelpRequestSuccessState) {
                 Navigator.of(context).pop();
+                setState(() {
+                  getHelp = false;
+                  _markers.clear();
+                  _currentPosition = null;
+                  mapController?.dispose();
+                });
               } else if (state is NotCancelHelpRequestState) {
                 Navigator.of(context).pop();
               }
