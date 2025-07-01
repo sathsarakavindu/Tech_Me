@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:ui' as ui;
 import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_notch_bottom_bar.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -26,7 +27,7 @@ class DashboardTechnician extends StatefulWidget {
 class _DashboardTechnicianState extends State<DashboardTechnician> {
   String? username;
   final PageController _pageController = PageController();
-  PersistenceHelper persistenceHelper = PersistenceHelper();
+  final PersistenceHelper persistenceHelper = PersistenceHelper();
   final GetHelp getHelp = GetHelp();
   int _currentPage = 0;
   bool? isUserAccount;
@@ -45,13 +46,27 @@ class _DashboardTechnicianState extends State<DashboardTechnician> {
     'assets/images/dashboard/repair_image2.png',
     'assets/images/dashboard/repair_image3.png',
   ];
+
+  bool? isApprovedHelp;
+
   void loadUsername() async {
     username = await persistenceHelper.getName();
     print("Username from SharedPreferences: $username");
   }
 
+  void checkHelpApprovalStatus() async {
+    isApprovedHelp = await persistenceHelper.getApproveHelp();
+
+    if (isApprovedHelp == true) {
+      print("Help request is approved");
+    } else {
+      print("Help request is not approved");
+    }
+  }
+
   void selectedUserInfo(
-      {required String name,
+      {required String help_id,
+      required String name,
       required String vehicle_image,
       required String vehicle_no,
       required String vehicle_model,
@@ -60,7 +75,6 @@ class _DashboardTechnicianState extends State<DashboardTechnician> {
     showModalBottomSheet(
       isScrollControlled: true,
       backgroundColor: Colors.white,
-      barrierColor: Colors.black,
       context: context,
       builder: (context) {
         return DraggableScrollableSheet(
@@ -72,12 +86,14 @@ class _DashboardTechnicianState extends State<DashboardTechnician> {
               return SingleChildScrollView(
                 child: Container(
                   width: double.infinity,
-                  padding: EdgeInsets.all(10),
+                  //padding: EdgeInsets.all(10),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(12.0),
+                            topRight: Radius.circular(12.0)),
                         child: vehicle_image.isNotEmpty
                             ? Image.network(
                                 vehicle_image,
@@ -150,24 +166,97 @@ class _DashboardTechnicianState extends State<DashboardTechnician> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Color(0xFF000b58),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                              ),
-                              onPressed: () => Navigator.pop(context),
-                              child: Text(
-                                "Approve",
-                                style: TextStyle(
-                                  color: const ui.Color.fromARGB(
-                                      255, 233, 232, 232),
-                                  fontFamily: AppConfig.font_bold_family,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
+                            isApprovedHelp == false
+                                ? ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Color(0xFF000b58),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                    ),
+                                    onPressed: () async {
+                                      // await getHelp.approveHelpRequest(
+                                      //   await persistenceHelper.getMakeHelpId(),
+                                      // );
+                                      bool isApprovedHelp =
+                                          await getHelp.approveHelpRequest(
+                                        help_id,
+                                      );
+
+                                      if (isApprovedHelp) {
+                                        await persistenceHelper
+                                            .setApproveHelp(isApprovedHelp);
+                                        checkHelpApprovalStatus();
+                                        print(
+                                            "Help request approved successfully");
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          SnackBar(
+                                            content:
+                                                Text("Help request approved"),
+                                          ),
+                                        );
+                                      } else {
+                                        await persistenceHelper
+                                            .setApproveHelp(isApprovedHelp);
+                                        print("Failed to approve help request");
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          SnackBar(
+                                            content: Text(
+                                                "Failed to approve help request"),
+                                          ),
+                                        );
+                                      }
+
+                                      Navigator.pop(context);
+                                    },
+                                    child: Text(
+                                      "Approve",
+                                      style: TextStyle(
+                                        color: const ui.Color.fromARGB(
+                                            255, 233, 232, 232),
+                                        fontFamily: AppConfig.font_bold_family,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  )
+                                : ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.red,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                    ),
+                                    onPressed: () async {
+                                      bool isCancelledApproval = await getHelp
+                                          .cancelApprovedHelpRequest(
+                                        help_id,
+                                      );
+
+                                      if (isCancelledApproval) {
+                                        await persistenceHelper
+                                            .setApproveHelp(false);
+                                        checkHelpApprovalStatus();
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          SnackBar(
+                                            content: Text(
+                                                "Successfully cancelled the approved request"),
+                                          ),
+                                        );
+                                      }
+                                      Navigator.pop(context);
+                                    },
+                                    child: Text(
+                                      "Not Approve",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontFamily: AppConfig.font_bold_family,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.white,
@@ -236,6 +325,7 @@ class _DashboardTechnicianState extends State<DashboardTechnician> {
 
         if (user.image_link.isNotEmpty) {
           try {
+            print("Help id: ${user.help_id}");
             userIcon = await getCustomMarkerFromNetwork(user.image_link);
           } catch (e) {
             print("Error loading marker icon for ${user.user_name}: $e");
@@ -253,6 +343,7 @@ class _DashboardTechnicianState extends State<DashboardTechnician> {
                 ),
             icon: userIcon,
             onTap: () => selectedUserInfo(
+                help_id: user.help_id ?? '',
                 name: user.user_name,
                 address: user.address,
                 contact_no: user.contact_no,
@@ -377,6 +468,7 @@ class _DashboardTechnicianState extends State<DashboardTechnician> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    checkHelpApprovalStatus();
     fetchUserLocations();
     isUser();
     loadUsername();
@@ -573,8 +665,8 @@ class _DashboardTechnicianState extends State<DashboardTechnician> {
                               zoom: 15.0,
                             ),
                             scrollGesturesEnabled: true,
-                            myLocationEnabled: true, // ✅ Shows blue dot
-                            myLocationButtonEnabled: true, // ✅ Location button
+                            myLocationEnabled: true,
+                            myLocationButtonEnabled: true,
                             markers: _markers,
                             zoomControlsEnabled: true,
                           ),

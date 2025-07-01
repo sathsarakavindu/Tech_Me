@@ -1,4 +1,5 @@
 class MakeHelp {
+  String? help_id;
   String user_name;
   String email;
   String vehicle_no;
@@ -13,6 +14,7 @@ class MakeHelp {
   double longitude;
 
   MakeHelp({
+    this.help_id,
     required this.user_name,
     required this.email,
     required this.vehicle_no,
@@ -29,6 +31,7 @@ class MakeHelp {
 
   factory MakeHelp.fromJson(Map<String, dynamic> help_list) {
     return MakeHelp(
+      help_id: help_list['_id'],
       user_name: help_list['user_name'],
       email: help_list['email'],
       vehicle_no: help_list['vehicle_no'],

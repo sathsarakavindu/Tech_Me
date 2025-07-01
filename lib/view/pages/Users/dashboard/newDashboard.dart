@@ -56,9 +56,6 @@ class _DashboardNewState extends State<DashboardNew> {
   GoogleMapController? mapController;
   LatLng? _currentPosition;
   final Set<Marker> _markers = {};
-  
-
-  
 
   void checkGetHelpStatus() async {
     bool isGetHelp = await persistenceHelper.getHelpStatus();
