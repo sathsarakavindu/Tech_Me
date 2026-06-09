@@ -11,10 +11,12 @@ import 'package:tec_me/view_model/persistence/sharedPreferences.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Supabase.initialize(
-    url: 'https://xpprxhnhgxeiqaepmroo.supabase.co',
-    anonKey:
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhwcHJ4aG5oZ3hlaXFhZXBtcm9vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ4OTE1MTUsImV4cCI6MjA2MDQ2NzUxNX0.rH7LBY9ilNZpbkhfsRkHE4QbGMBuOMuxn4QSQRlZt-4',
-  );
+      url:
+          'https://wdfsjkdhrevvriidygoq.supabase.co', //'https://xpprxhnhgxeiqaepmroo.supabase.co',
+      anonKey:
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndkZnNqa2RocmV2dnJpaWR5Z29xIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA3MjM3MTcsImV4cCI6MjA5NjI5OTcxN30.1CMhFotzGrOTi_HycfkTO_IjPVrBOBnw0m6R7Obts9s'
+      // 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhwcHJ4aG5oZ3hlaXFhZXBtcm9vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ4OTE1MTUsImV4cCI6MjA2MDQ2NzUxNX0.rH7LBY9ilNZpbkhfsRkHE4QbGMBuOMuxn4QSQRlZt-4',
+      );
   // runApp(const MyApp());
   await isEmailAvailable();
 }

@@ -57,6 +57,7 @@ class _DashboardNewState extends State<DashboardNew> {
   LatLng? _currentPosition;
   final Set<Marker> _markers = {};
 
+/*
   void checkGetHelpStatus() async {
     bool isGetHelp = await persistenceHelper.getHelpStatus();
     if (isGetHelp) {
@@ -68,6 +69,21 @@ class _DashboardNewState extends State<DashboardNew> {
       setState(() {
         getHelp = false;
       });
+    }
+  }
+  */
+
+  void checkGetHelpStatus() async {
+    bool isGetHelp = await persistenceHelper.getHelpStatus();
+
+    if (!mounted) return;
+
+    setState(() {
+      getHelp = isGetHelp;
+    });
+
+    if (isGetHelp) {
+      await _getCurrentLocation();
     }
   }
 
@@ -465,9 +481,12 @@ class _DashboardNewState extends State<DashboardNew> {
                                       borderRadius: BorderRadius.circular(10),
                                       child: Container(
                                         height: w * 0.9,
-                                        child: Image.network(
+                                        child: Image.asset(
                                             fit: BoxFit.fill,
-                                            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTq3ukBXDz33mhp_itZa9ETKgy1XlAxIbVPw&s"),
+                                            "assets/images/dashboard/img_get_help.png"),
+                                        // child: Image.network(
+                                        //     fit: BoxFit.fill,
+                                        //     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTq3ukBXDz33mhp_itZa9ETKgy1XlAxIbVPw&s"),
                                       ),
                                     ),
                                     Positioned(
@@ -572,6 +591,12 @@ class _DashboardNewState extends State<DashboardNew> {
                 _showCancelHelp(context);
               } else if (state is CancelHelpRequestSuccessState) {
                 Navigator.of(context).pop();
+                setState(() {
+                  getHelp = false;
+                  _markers.clear();
+                  _currentPosition = null;
+                  mapController?.dispose();
+                });
               } else if (state is NotCancelHelpRequestState) {
                 Navigator.of(context).pop();
               }
@@ -681,8 +706,8 @@ class _DashboardNewState extends State<DashboardNew> {
               break;
           }
         },
-        kIconSize: 30,
-        kBottomRadius: 12.0,
+        kIconSize: 22,
+        kBottomRadius: 10.0,
       ),
     );
   }
