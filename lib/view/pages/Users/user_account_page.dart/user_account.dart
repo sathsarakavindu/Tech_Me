@@ -90,6 +90,7 @@ class _UserAccountPageState extends State<UserAccountPage> {
                               fit: BoxFit.contain,
                             ),
                           ),
+                          
                           Center(
                             child: Text(
                               "Account",
@@ -117,20 +118,6 @@ class _UserAccountPageState extends State<UserAccountPage> {
                             ),
                             */
                           ),
-                          // Positioned(
-                          //   top: w * 0.30,
-                          //   left: w * 0.40,
-                          //   child: Container(
-                          //     width: w * 0.20,
-                          //     height: w * 0.20,
-                          //     child: ClipRRect(
-                          //       borderRadius: BorderRadius.circular(50.0),
-                          //       child: Image.network(
-                          //           fit: BoxFit.cover,
-                          //           "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRKc6EnanoKKj61vCCamKeDwXelxNzUElzIWWDgf75XNEa1-uaHgiSq32hF7bp73Tq9nsY&usqp=CAU"),
-                          //     ),
-                          //   ),
-                          // ),
                         ],
                       ),
                       Positioned(
