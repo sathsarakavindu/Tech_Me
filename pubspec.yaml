@@ -47,6 +47,10 @@ dependencies:
   supabase_flutter: ^2.8.4
   path: ^1.9.0
   animated_notch_bottom_bar: ^1.0.3
+  permission_handler: ^12.0.0+1
+  shimmer: ^3.0.0
+  cached_network_image: ^3.4.1
+  socket_io_client: ^3.1.5
 
 dev_dependencies:
   flutter_test:
@@ -102,6 +106,7 @@ flutter:
     - assets/images/notification/
     - assets/images/add_vehicle/
     - assets/images/log_out/
+    - assets/images/account/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
